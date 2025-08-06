@@ -1,12 +1,12 @@
-import Header from "@layouts/components/Header";
+import Header from '@layouts/components/HeaderDefault';
 
 function DefaultLayout({ children }) {
     return (
-        <div>
+        <div className="bg-[#f7f7ff] overflow-hidden min-h-screen">
             <Header></Header>
-            <div className='mx-auto  my-5 px-20 '>{children}</div>
+            <div className="md:mx-auto  md:px-20 px-2 ">{children}</div>
         </div>
     );
 }
 
-export default DefaultLayout
+export default DefaultLayout;

@@ -1,11 +1,15 @@
-import React from 'react'
+import React from 'react';
 
-const Size = ({size}) => {
-  return (
-    <div className='border rounded-lg p-2 border-gray-300 my-2 cursor-pointer text-sm text-gray-700 hover:border-[var(--primary)]'>
-        {size}
-    </div>
-  )
-}
+const Size = ({ size, chosenSize }) => {
+    return (
+        <div
+            className={` rounded-md py-2 px-6  my-2 cursor-pointer 
+                ${chosenSize === size ? 'border-[var(--primary)] border-2 ' : 'border-gray-300 border'}
+        text-sm text-gray-700 hover:border-[var(--primary)]`}
+        >
+            {size}
+        </div>
+    );
+};
 
-export default Size
+export default Size;
