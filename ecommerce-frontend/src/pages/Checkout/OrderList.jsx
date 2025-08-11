@@ -5,9 +5,10 @@ import SubmitButton from '@components/Form/SubmitButton';
 import OrderItem from './components/OrderItem';
 import { Link } from 'react-router-dom';
 import InforBox from './components/InforBox';
+import { useSelector } from 'react-redux';
 const OrderList = () => {
     const [orderList, setOrderList] = useState([]);
-    const customerId = 'e44f65c3-bb15-48d9-8f9a-4ce71484b681';
+    const customerId = JSON.parse(useSelector((state) => state.customer.customer)).id;
 
     const getAllOrders = async () => {
         try {
@@ -35,13 +36,10 @@ const OrderList = () => {
                 </div>
                 <div className="">
                     {orderList?.map((order, index) => (
-                        <Link to={`/purchase/detail/${order.id}`}>
-                            <div
-                                className="flex flex-col  bg-white  cursor-pointer  p-4  shadow-lg  my-5   "
-                                key={index}
-                            >
+                        <Link to={`/purchase/detail/${order.id}`} key={index}>
+                            <div className="flex flex-col  bg-white  cursor-pointer  p-4  shadow-lg  my-5   ">
                                 {order?.orderDetails.map((detail, index1) => (
-                                    <OrderItem detail={detail} key={index1}/>
+                                    <OrderItem detail={detail} key={index1} />
                                 ))}
                                 <div className="flex flex-col items-end justify-center gap-4 mt-5     ">
                                     <div className="flex gap-4 items-center  text-lg ">

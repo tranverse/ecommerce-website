@@ -30,7 +30,7 @@ const AddCategory = () => {
         const response = await UploadService.uploadSingleImage(form);
         return response.data.data;
     };
-    const handleAddCategory = async (data) => {
+    const handleAddCategory = async (data, reset) => {
         const thumbnail = await handleUploadImage();
         if (data.parentCategory == '') {
             data.parentCategory = null;
@@ -41,19 +41,21 @@ const AddCategory = () => {
             ...data,
             thumbnail,
         };
-        console.log(payload);
         try {
             const response = await CategoryService.addCategory(payload);
             toast.success(response.data.message);
+            reset();
+            setUrl('');
+            setFile(null);
         } catch (error) {
             toast.error(error);
         }
     };
 
     return (
-        <div className="bg-white p-4 text-gray-700 text-sm rounded-md shadow">
+        <div className="bg-white p-4 text-gray-700 text-sm rounded-md min-h-[615px] shadow">
             <FormWrapper onSubmit={handleAddCategory}>
-                <div className="flex flex-col gap-4  ">
+                <div className="flex flex-col gap-4    ">
                     <InputField Element={'input'} name={'name'} label={'Name'} />
                     <SelectCategory
                         items={parentCategories}
@@ -66,12 +68,14 @@ const AddCategory = () => {
                             <p>Thumbnail</p>
                             <span className="text-red-500">*</span>
                         </div>
-                        <UploadImage setThumbnail={setFile} setUrl={setUrl} url={url} />
+                        <UploadImage setThumbnail={setFile} setUrl={setUrl} url={url} className={'w-72  h-80  '} />
+                    </div>
+                    <div className=" mt-auto  ">
+                        <SubmitButton type={'submit'} className={'my-4    p-2 text-md hover:bg-purple-500'}>
+                            Add category
+                        </SubmitButton>
                     </div>
                 </div>
-                <SubmitButton type={'submit'} className={'my-4 p-2 text-md hover:bg-purple-500'}>
-                    Add category
-                </SubmitButton>
             </FormWrapper>
         </div>
     );

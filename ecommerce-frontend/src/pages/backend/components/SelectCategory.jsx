@@ -1,15 +1,12 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-
+import Label from './Label';
 const SelectCategory = ({ items, name, label, isAdd = false }) => {
     const { register } = useFormContext();
     return (
         <div className="text-gray-700 text-sm  ">
-            <p className="mb-1">{label}</p>
-            <select
-                {...register(name)}
-                className="w-full cursor-pointer border border-gray-300 p-2 outline-none rounded-md"
-            >
+            <Label label={label} />
+            <select {...register(name)} className="w-full cursor-pointer border border-gray-300 p-2 outline-none rounded-md">
                 {isAdd && <option value="">No option</option>}
 
                 {items?.map((item, index) => (

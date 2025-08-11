@@ -32,13 +32,13 @@ public class CartController {
         );
     }
 
-    @GetMapping("/{customerId}")
-    public ResponseEntity<ApiResponse<List<CartDetailResponse>>> getAllProductsByCart(@PathVariable String customerId ) {
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<CartDetailResponse>>> getAllProductsByCart() {
         return ResponseEntity.ok(
                 ApiResponse.<List<CartDetailResponse>>builder()
                         .code("Cart-s-get-all")
                         .message("Add product to cart")
-                        .data(cartService.getAllCartDetails(customerId))
+                        .data(cartService.getAllCartDetails())
                         .build()
         );
     }

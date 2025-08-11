@@ -85,4 +85,14 @@ public class OrderService {
         Order order = orderRepository.findById(id).orElse(null);
         return orderMapper.toOrderResponse(order);
     }
+
+    public List<OrderResponse> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (Order order : orders) {
+            OrderResponse orderResponse = orderMapper.toOrderResponse(order);
+            orderResponses.add(orderResponse);
+        }
+        return orderResponses;
+    }
 }

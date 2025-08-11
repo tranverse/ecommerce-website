@@ -1,13 +1,72 @@
 import Header from '@layouts/components/HeaderDefault';
 import SidebarFilter from './SidebarFilter';
+import Product from '@pages/Product';
+import { useEffect, useState } from 'react';
+import ProductService from '@services/product.service';
+import { color } from '@mui/system';
 function ProductLayout({ children }) {
+    const [type, setType] = useState();
+    const [value, setValue] = useState();
+    const [products, setProducts] = useState([]);
+    const [showProducts, setShowProducts] = useState([]);
+    const [startPrice, setStartPrice] = useState('');
+    const [endPrice, setEndPrice] = useState('');
+    const getAllProducts = async () => {
+        const response = await ProductService.getAllProduct();
+        console.log(response)
+        if (response.data.success) {
+            setProducts(response.data.data);
+            setShowProducts(response.data.data);
+        }
+    };
+
+    const handleFilterCategory = () => {
+        setShowProducts(products.filter((product) => product.category.name === value.trim()));
+    };
+    const handleFilterColor = () => {
+        setShowProducts(
+            products.filter((product) => product.variants.some((variant) => variant.color.includes(value.toLowerCase()))),
+        );
+    };
+    const handleFilterRating = () => {};
+
+    const handleFilterPrice = () => {
+        setShowProducts(
+            products.filter(
+                (product) => Number(product?.price) >= Number(startPrice) && Number(product?.price) <= Number(endPrice),
+            ),
+        );
+    };
+    useEffect(() => {
+        getAllProducts();
+    }, []);
+
+    useEffect(() => {
+        if (type == 'category') {
+            handleFilterCategory();
+        } else if (type == 'color') {
+            handleFilterColor();
+        } else if (type == 'price') {
+            handleFilterPrice();
+        }
+    }, [type, value, startPrice, endPrice]);
+    console.log(products);
+
+    console.log(type, startPrice, endPrice);
     return (
         <>
             <div className="min-h-screen bg-gray-100 overflow-hidden">
                 <Header></Header>
-                <div className="md:mt-32 md:mx-auto gap-5 md:flex px-4 md:px-10  ">
+                <div className="md:mt-20 md:mx-auto gap-5 md:flex px-4 md:px-10  ">
                     <aside className="md:w-1/5 bg-white">
-                        <SidebarFilter></SidebarFilter>
+                        <SidebarFilter
+                            setType={setType}
+                            setValue={setValue}
+                            setStartPrice={setStartPrice}
+                            setEndPrice={setEndPrice}
+                            startPrice={startPrice}
+                            endPrice={endPrice}
+                        ></SidebarFilter>
                     </aside>
                     <div className="md:w-4/5">
                         <div className="my-2">
@@ -16,7 +75,9 @@ function ProductLayout({ children }) {
                                 <option value="">Price high to low</option>
                             </select>
                         </div>
-                        <div className="">{children}</div>
+                        <Product type={type} value={value} products={showProducts}>
+                            {children}
+                        </Product>
                     </div>
                 </div>
             </div>

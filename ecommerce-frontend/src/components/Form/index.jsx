@@ -2,7 +2,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 function FormWrapper({ children, onSubmit, defaultValues = {}, className }) {
     const methods = useForm({ defaultValues });
-    const handleSubmit = methods.handleSubmit(onSubmit);
+    const handleSubmit = methods.handleSubmit((data) => onSubmit(data, methods.reset));
 
     return (
         <>

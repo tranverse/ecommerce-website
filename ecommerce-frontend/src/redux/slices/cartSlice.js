@@ -3,8 +3,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchCart = createAsyncThunk(
     'cart/fetchCart',
-    async(customerId, thunkAPI) => {
-        const response = await CartService.getAllProducts(customerId)
+    async(_, thunkAPI) => {
+        const state = thunkAPI.getState()
+        if(!state.customer.isLoggedIn){
+            return thunkAPI.rejectWithValue('Customer not logged in')
+        }
+        const response = await CartService.getAllProducts()
         return response.data.data
     }
 )
@@ -60,7 +64,6 @@ const cartSlice = createSlice({
             if (index !== -1) {
                 state.items[index].quantity = updated.quantity;
             } else {
-                // hoặc fetch lại để đảm bảo đúng
             }
         })
         .addCase(updateQuantity.fulfilled, (state, action) => {

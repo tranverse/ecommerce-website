@@ -6,8 +6,8 @@ const CartService = {
     addProductToCart (cartRequest){
         return apiRequest(axiosInstance.post(URL + "/api/cart", cartRequest))
     },
-    getAllProducts (customerId) {
-        return apiRequest(axiosInstance.get(URL + "/api/cart/" + customerId))
+    getAllProducts () {
+        return apiRequest(axiosInstance.get(URL + "/api/cart"))
 
     },
     updateQuantity(quantityRequest){

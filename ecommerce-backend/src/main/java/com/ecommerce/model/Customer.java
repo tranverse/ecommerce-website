@@ -24,9 +24,12 @@ public class Customer {
 
     private String name;
 
+    @Column(unique = true)
     private String email;
 
     private String phone;
+
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private CustomerTire tire;
@@ -42,6 +45,7 @@ public class Customer {
     private List<Review> reviews = new ArrayList<>();
 
     @OneToOne(mappedBy = "customer")
+    @JsonIgnore
     private Cart cart;
 
 

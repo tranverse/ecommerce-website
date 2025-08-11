@@ -20,8 +20,13 @@ const ProductService = {
     addProduct(data){
         return apiRequest(axiosInstance.post(URL + '/api/product', data))
 
+    },
+    getAllProductOnSale  (){
+        return apiRequest(axiosInstance.get(URL + '/api/product/on-sale'))
+    },
+    getTopSellingProduct(){
+        return apiRequest(axiosInstance.get(URL + '/api/product/top-selling'))
     }
-
 }
 
 export default ProductService

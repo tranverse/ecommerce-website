@@ -37,3 +37,7 @@ a {
     background-color: #888;
 }
 
+.scrollbar-hide::-webkit-scrollbar{
+    display: none;
+}
+

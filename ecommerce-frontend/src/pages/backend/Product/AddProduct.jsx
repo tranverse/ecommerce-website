@@ -15,7 +15,7 @@ import UploadService from '@services/upload.service';
 import { set, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import SelectStatus from '../components/SelectStatus';
-
+import Label from '../components/Label';
 const AddProduct = () => {
     const [selectedColors, setSelectedColors] = useState([]);
     const [selectedSizes, setSelectedSized] = useState([]);
@@ -75,65 +75,63 @@ const AddProduct = () => {
         return res.data.data;
     };
 
-    const handleSubmit = async (data) => {
-        try {
-            const uploadedImages = await uploadImages();
-            const uploadedThumbnail = await uploadThumbnail();
+    const handleSubmit = async (data, reset) => {
+        const uploadedImages = await uploadImages();
+        const uploadedThumbnail = await uploadThumbnail();
 
-            data.category = { id: data.category };
-            const payload = {
-                ...data,
-                variants,
-                images: uploadedImages,
-                thumbnail: uploadedThumbnail,
-            };
+        data.category = { id: data.category };
+        const payload = {
+            ...data,
+            variants,
+            images: uploadedImages,
+            thumbnail: uploadedThumbnail,
+        };
 
-            console.log(payload);
-            const productResponse = await ProductService.addProduct(payload);
+        console.log(payload);
+        const productResponse = await ProductService.addProduct(payload);
+        console.log(productResponse)
+        
+        if (productResponse.data.success) {
             toast.success('Add product successfully');
-        } catch (error) {
+            reset();
+            setThumbnail('');
+            setUrl('');
+            setVariants([]);
+            setSelectedColors([]);
+            setSelectedSized([]);
+            setImages([]);
+        } else {
             console.error('Failed to submit', error);
-            toast.error('Failed to add product');
+            toast.error(productResponse.data.message);
         }
     };
 
     return (
-        <div className="bg-white p-4 shadow rounded ">
+        <div className="bg-white p-4 shadow rounded border-indigo-50-50">
             <FormWrapper className={'flex flex-col min-h-[620px]'} onSubmit={handleSubmit}>
                 <div className="grid grid-cols-[2fr_1.5fr] gap-10">
                     <div className="flex flex-col gap-4 ">
-                        <InputField
-                            name="name"
-                            label={'Product name'}
-                            placeholder={'Enter product name'}
-                            Element={'input'}
-                        />
+                        <InputField name="name" label={'Product name'} placeholder={'Enter product name'} Element={'input'} />
                         <InputField name="description" label={'Description'} Element={'textarea'} />
                         <div>
-                            <p className="text-gray-700 text-sm ">Thumbnail</p>
-                            <UploadImage url={url} setUrl={setUrl} setThumbnail={setThumbnail} />
+                            <Label label={'Thumbnail'} />
+                            <UploadImage url={url} setUrl={setUrl} setThumbnail={setThumbnail} className={'w-56 h-56'} />
                         </div>
                     </div>
                     <div className="flex flex-col gap-4">
                         <div className="flex justify-between gap-4 ">
-                            <InputField
-                                name="price"
-                                type={'number'}
-                                label={'Price'}
-                                placeholder={'00.00'}
-                                Element={'input'}
-                            />
+                            <InputField name="price" type={'number'} label={'Price'} placeholder={'00.00'} Element={'input'} />
                             <InputField name="discountPercentage" label={'Discount (%)'} Element={'input'} />
                         </div>
                         <div className="flex  justify-between gap-4">
                             <InputField name="origin" label={'Origin'} Element={'input'} />
-                            <SelectStatus item={status} name={'status'} label={'Status'}/>
+                            <SelectStatus item={status} name={'status'} label={'Status'} />
                         </div>
 
                         <SelectCategory items={categories} label={'Category'} name={'category'} isAdd={false} />
                         <div>
                             <div className="flex justify-between text-sm">
-                                <p className="text-gray-700 mb-1  ">Variant</p>
+                                <Label label={'Variant '} />
                                 {selectedColors.length > 0 && selectedSizes.length > 0 && (
                                     <p
                                         onClick={() => setIsShowPopup(true)}
@@ -163,12 +161,9 @@ const AddProduct = () => {
                         </div>
                     </div>
                 </div>
-                <p className="text-gray-700 text-sm mb-1 ">Product images</p>
+                <Label label={'Product images'} />
                 {colorImages.map((item, index) => (
-                    <div
-                        className=" border-[var(--primary)] border-dashed border  flex items-center w-full p-2 "
-                        key={index}
-                    >
+                    <div className=" border-[var(--primary)] border-dashed border  flex items-center w-full p-2 " key={index}>
                         <div className="flex w-1/11 items-center gap-4">
                             <div className="flex flex-wrap justify-center  items-center gap-2 overflow-y-auto bg-white  p-1 px-2   ">
                                 <div
@@ -210,10 +205,7 @@ const AddProduct = () => {
                                                     handleRemoveImages(image.color, image.url);
                                                 }}
                                             />
-                                            <img
-                                                src={image?.url}
-                                                className="object-cover w-full h-full rounded-md   "
-                                            />
+                                            <img src={image?.url} className="object-cover w-full h-full rounded-md   " />
                                         </div>
                                     ))
                             ) : (
@@ -235,7 +227,7 @@ const AddProduct = () => {
                         </div>
                     </div>
                 )}
-                <SubmitButton children={'Add product'} className={'  mt-auto   '} type={'submit'} />
+                <SubmitButton children={'Add product'} className={'  mt-4    '} type={'submit'} />
             </FormWrapper>
             {isShowPopup && (
                 <VariantPopup

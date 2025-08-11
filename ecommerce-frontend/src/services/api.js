@@ -8,16 +8,24 @@ const axiosInstance = axios.create({
     }
 })
 
+axiosInstance.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('accessToken') || localStorage.getItem('employeeAccessToken')
+        if(token){
+            config.headers.Authorization = `Bearer ${token}`
+        }
+        return config
+    },
+    (error) => Promise.reject(error)
+)
+
 export async function apiRequest(axiosPromise, getData = false) {
     try {
         const response = await axiosPromise;
         const result = getData ? response.data.data : {data: response.data, status: response.status}
-        console.log(result)
-
         return result
     } catch (error) {
-        console.log(error)
-        throw error.response?.data || error
+        return error.response
     }
 
 } 

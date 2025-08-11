@@ -15,6 +15,7 @@ import com.ecommerce.repository.ProductRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,8 +63,11 @@ public class CartService {
         }
     }
 
-    public List<CartDetailResponse> getAllCartDetails(String customerId) {
-        Cart cart = cartRepository.findByCustomerId(customerId);
+    public List<CartDetailResponse> getAllCartDetails() {
+
+        String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+
+        Cart cart = cartRepository.findByCustomerEmail(email);
 
         List<CartDetail> cartDetails = cartDetailRepository.findByCart(cart);
 

@@ -10,7 +10,10 @@ const OrderService = {
     },
     getOrderDetail(orderId){
         return apiRequest(axiosInstance.get(URL + `/api/order/detail/${orderId}`))
-    }
+    },
+    getAllOrder(){
+        return apiRequest(axiosInstance.get(URL + `/api/order/get-all`))
+    },
 
 }
 export default OrderService

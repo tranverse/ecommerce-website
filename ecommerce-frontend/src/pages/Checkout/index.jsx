@@ -9,14 +9,14 @@ import VNPay from '@assets/images/Logo/vnpay.png';
 import Momo from '@assets/images/Logo/momo.png';
 import OrderService from '@services/order.service';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 const Checkout = () => {
     const location = useLocation();
     const { payload } = location.state || {};
     const { chosenProduct, discountPrice, totalPrice } = payload;
     const [checkoutProducts, setCheckoutProducts] = useState([]);
-    const customerId = 'e44f65c3-bb15-48d9-8f9a-4ce71484b681';
+    const customerId = useSelector((state) => state.customer.customer.id)
     const [paymentMethod, setPaymentMethod] = useState('');
-    console.log(payload);
     const handleCaculatePrice = (product) => {
         let price = product?.product?.price - (product?.product.price * product?.product?.discountPercentage) / 100;
         let discountPrice = (product?.product.price * product?.product?.discountPercentage) / 100;
@@ -54,10 +54,10 @@ const Checkout = () => {
                 quantity: product?.quantity,
                 originalPrice: product?.product?.price,
                 discountPrice:
-                    product?.product?.price - (product?.product?.price * product?.product?.discountPercentage) / 100 ||
-                    0,
+                    product?.product?.price - (product?.product?.price * product?.product?.discountPercentage) / 100 || 0,
                 totalPrice:
-                    (product?.product?.price - (product?.product?.price * product?.product?.discountPercentage) / 100)*quantity,
+                    (product?.product?.price - (product?.product?.price * product?.product?.discountPercentage) / 100) *
+                    product?.quantity,
             }));
             setCheckoutProducts(newProducts);
         }
@@ -109,9 +109,8 @@ const Checkout = () => {
                                     </div>
                                     <div className="text-sm text-center break-words">
                                         <span>Variant: </span>
-                                        {product.variant.color.charAt(0).toUpperCase() +
-                                            product.variant.color.slice(1)}{' '}
-                                        / {product.variant.size}
+                                        {product.variant.color.charAt(0).toUpperCase() + product.variant.color.slice(1)} /{' '}
+                                        {product.variant.size}
                                     </div>
                                 </div>
                                 <p className="text-center">{product.quantity}</p>
@@ -131,12 +130,7 @@ const Checkout = () => {
                 <p className="text-orange-500 font-semibold text-lg ">Payment method</p>
                 <div className=" flex gap-10 ">
                     <div className="flex items-center gap-4 px-2 m-2">
-                        <input
-                            type="radio"
-                            name="paymentMethod"
-                            value="VN_PAY"
-                            onChange={(e) => handleInputChange(e)}
-                        />
+                        <input type="radio" name="paymentMethod" value="VN_PAY" onChange={(e) => handleInputChange(e)} />
                         <img src={VNPay} className="w-12 h-12 object-contain" alt="" />
                         <p>VNPay</p>
                     </div>

@@ -26,6 +26,7 @@ public class ProductResponse {
     private ProductStatus status;
     private Category category;
     private String thumbnail;
+    private Long saleVolume;
     private List<Image> images;
     private List<Variant> variants = new ArrayList<>();
 }

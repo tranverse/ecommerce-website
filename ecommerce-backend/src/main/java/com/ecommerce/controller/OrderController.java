@@ -52,4 +52,16 @@ public class OrderController {
                         .build()
         );
     }
+    @GetMapping("/get-all")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrderDetail() {
+        return ResponseEntity.ok(
+                ApiResponse.<List<OrderResponse>>builder()
+                        .message("Get all order successfully")
+                        .code("Order-s-get-all")
+                        .data(orderService.getAllOrders())
+                        .build()
+        );
+    }
+
+
 }

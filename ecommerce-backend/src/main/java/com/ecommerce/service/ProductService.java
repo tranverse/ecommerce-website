@@ -2,6 +2,7 @@ package com.ecommerce.service;
 
 import com.ecommerce.dto.product.ProductRequest;
 import com.ecommerce.dto.product.ProductResponse;
+import com.ecommerce.dto.product.TopSellingProduct;
 import com.ecommerce.enums.ProductStatus;
 import com.ecommerce.mapper.ProductMapper;
 import com.ecommerce.model.Image;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,9 +32,16 @@ public class ProductService {
     final ProductMapper productMapper;
 
     public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return productMapper.toProductResponseList(products);
+        List<TopSellingProduct> topSellingProducts = productRepository.getSaleVolume();
+        return topSellingProducts.stream().map(
+                product -> {
+                    ProductResponse productResponse = productMapper.toProductResponse(product.getProduct());
+                    productResponse.setSaleVolume(product.getQuantity());
+                    return productResponse;
+                }
+        ).toList();
     }
+
     public ProductResponse getProduct(String id) {
         Product product = productRepository.findById(id).orElse(null);
         return productMapper.toProductResponse(product);
@@ -74,5 +83,25 @@ public class ProductService {
 
     public List<ProductStatus> getProductStatuses() {
         return Arrays.asList(ProductStatus.values());
+    }
+
+
+    public List<ProductResponse> getAllProductAllSale(){
+        List<Product> products = productRepository.findAll();
+        products = products.stream().filter(product -> product.getDiscountPercentage() > 0 &&
+                product.getStatus() == ProductStatus.AVAILABLE).collect(Collectors.toList());
+         return productMapper.toProductResponseList(products);
+    }
+
+    public List<ProductResponse> getTopFiveProducts() {
+        List<TopSellingProduct> topSellingProducts = productRepository.getSaleVolume();
+            return topSellingProducts.stream()
+            .sorted(Comparator.comparing(TopSellingProduct::getQuantity).reversed())
+            .limit(5)
+            .map(product -> {
+                ProductResponse productResponse = productMapper.toProductResponse(product.getProduct());
+                productResponse.setSaleVolume(product.getQuantity());
+                return productResponse;
+            }).toList();
     }
 }

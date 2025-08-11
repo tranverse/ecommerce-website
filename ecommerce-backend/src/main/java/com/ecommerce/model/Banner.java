@@ -6,7 +6,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -24,11 +27,13 @@ public class Banner {
 
     String link;
 
-    Date startDate;
+    @DateTimeFormat(pattern = "dd-MM-YYYY")
+    LocalDate startDate;
 
-    Date endDate;
+    @DateTimeFormat(pattern = "dd-MM-YYYY")
+    LocalDate endDate;
 
-    Boolean isActive;
+    Boolean isActive = true;
 
     Integer priority;
 

@@ -4,11 +4,11 @@ import { BsCartPlus } from 'react-icons/bs';
 import { CiStar } from 'react-icons/ci';
 import Price from './Price';
 import { Link } from 'react-router-dom';
-const ProductItem = ({ product }) => {
+const ProductItem = ({ product, className }) => {
     return (
-        <div className="border border-gray-200 hover:shadow-lg cursor-pointer h-full flex flex-col">
-            <div className="">
-                <img src={product?.thumbnail} className="w-full max-w-full h-[320px] object-contain" alt="Product" />
+        <div className="border border-gray-200 hover:shadow-lg cursor-pointer h-full flex flex-col bg-white ">
+            <div className="flex items-start ">
+                <img src={product?.thumbnail} className={`w-full max-w-full h-[360px] object-cover ${className}`} alt="Product" />
             </div>
             <div className="p-2 flex flex-col justify-between h-full ">
                 <div className=" text-base line-clamp-2 text-gray-700">
@@ -29,7 +29,7 @@ const ProductItem = ({ product }) => {
 
                         <p className="text-[13px] text-yellow-500 pl-1">4.8</p>
                     </div>
-                    <div className="text-[13px] text-gray-700">1k3 sold</div>
+                    <div className="text-[13px] text-gray-700">{product?.saleVolume || 0} sold</div>
                 </div>
                 <div className="flex justify-between mt-auto ">
                     <Price className={'text-md text-[var(--primary)]'}>

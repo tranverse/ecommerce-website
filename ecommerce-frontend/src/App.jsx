@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import routes from './router';
 import { ToastContainer, toast } from 'react-toastify';
@@ -16,9 +16,15 @@ function App() {
                                 path={route.path}
                                 key={index}
                                 element={
-                                    <Layout {...(route.layoutProps || '')}>
-                                        <Page />
-                                    </Layout>
+                                    Layout == null ? (
+                                        <React.Fragment>
+                                            <Page />
+                                        </React.Fragment>
+                                    ) : (
+                                        <Layout {...(route.layoutProps || '')}>
+                                            <Page />
+                                        </Layout>
+                                    )
                                 }
                             />
                         );
