@@ -10,7 +10,9 @@ public enum ErrorCode {
     USER_NOT_FOUND(102, "User not found"),
     EMAIL_EXISTED(103, "Email already existed"),
     EMPLOYEE_EXISTED(104, "Employee already existed"),
-    EMAIL_NOT_FOUND(105, "Email not found"),;
+    EMAIL_NOT_FOUND(105, "Email not found"),
+    EMPLOYEE_NOT_EXISTED(106, "Employee not existed"),;
+
 
 
 

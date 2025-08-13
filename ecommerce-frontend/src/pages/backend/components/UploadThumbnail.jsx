@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { MdCloudUpload } from 'react-icons/md';
 import { IoCloseOutline } from 'react-icons/io5';
-const UploadImage = ({ url, setUrl, setThumbnail, className }) => {
+const UploadImage = ({ url, setUrl, setThumbnail, className, isView = false }) => {
     const inputRef = useRef(null);
 
     const handleChooseImage = (e) => {
@@ -15,9 +15,9 @@ const UploadImage = ({ url, setUrl, setThumbnail, className }) => {
         <div className=" flex justify-center items-center ">
             {url ? (
                 <div className={`border border-[var(--primary)]  border-dashed   relative  rounded-md  ${className}  `}>
-                    <IoCloseOutline
-                        className="absolute top-1 bg-purple-400   p-0.5   text-white  
-                         rounded-full  right-1 cursor-pointer text-2xl hover:bg-red-400"
+                    <IoCloseOutline 
+                        className={`absolute top-1 bg-purple-400   p-0.5   text-white  ${isView ? 'hidden' : ''}
+                         rounded-full  right-1 cursor-pointer text-2xl hover:bg-red-400`}
                         onClick={(e) => {
                             e.stopPropagation();
                             setUrl('');

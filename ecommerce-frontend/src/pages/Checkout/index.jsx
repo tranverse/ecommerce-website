@@ -15,7 +15,7 @@ const Checkout = () => {
     const { payload } = location.state || {};
     const { chosenProduct, discountPrice, totalPrice } = payload;
     const [checkoutProducts, setCheckoutProducts] = useState([]);
-    const customerId = useSelector((state) => state.customer.customer.id)
+    const customerId = useSelector((state) => state.customer.customer.id);
     const [paymentMethod, setPaymentMethod] = useState('');
     const handleCaculatePrice = (product) => {
         let price = product?.product?.price - (product?.product.price * product?.product?.discountPercentage) / 100;
@@ -38,11 +38,12 @@ const Checkout = () => {
             paymentMethod: paymentMethod,
         };
         console.log(payload);
-        try {
-            const response = await OrderService.addOrder(payload);
-            toast.success('Order successfully');
-        } catch (error) {
-            toast.error(error);
+
+        const response = await OrderService.addOrder(payload);
+        if (response.data.success) {
+            toast.success(response.data.message);
+        } else {
+            toast.error(response.data.message);
         }
     };
 

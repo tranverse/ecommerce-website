@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 import { FaRegEye } from 'react-icons/fa';
 import { FaRegEyeSlash } from 'react-icons/fa';
 
-const InputField = ({ name, label, type, placeholder, Element, className }) => {
+const InputField = ({ name, label, type, placeholder, Element, className, readOnly = false }) => {
     const {
         register,
         getValues,
@@ -27,6 +27,7 @@ const InputField = ({ name, label, type, placeholder, Element, className }) => {
                     {...register(name, { required: `${label} is required`, validate: validateField })}
                     type={showPass ? 'text' : type}
                     id={name}
+                    readOnly={readOnly}
                     placeholder={placeholder}
                     className={`border  border-gray-300 px-3 py-1 outline-none rounded w-full
                         focus:ring-3 focus:ring-[var(--primary)]/40 ${className}`}

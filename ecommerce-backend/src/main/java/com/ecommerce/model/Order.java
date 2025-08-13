@@ -25,14 +25,20 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    private String orderCode;
+
     private BigDecimal totalPrice;
 
+    private BigDecimal discountPrice;
 
     private LocalDateTime orderDate;
+
+    private BigDecimal totalProductPrice;
 
     private String shippingAddress;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 50)
     private OrderStatus status;
 
     private BigDecimal shippingAmount;

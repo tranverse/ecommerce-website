@@ -20,13 +20,21 @@ import java.util.List;
 public class OrderResponse {
     private String id;
 
+    private String orderCode;
+
     private BigDecimal totalPrice;
+
+    private BigDecimal totalProductPrice;
 
     private LocalDateTime orderDate;
 
     private String shippingAddress;
 
+    private BigDecimal discountPrice;
+
     private OrderStatus status;
+
+    private Customer customer;
 
     private BigDecimal shippingAmount;
 

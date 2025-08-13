@@ -3,6 +3,8 @@ package com.ecommerce.service;
 import com.ecommerce.dto.order.OrderDetailResponse;
 import com.ecommerce.dto.order.OrderRequest;
 import com.ecommerce.dto.order.OrderResponse;
+import com.ecommerce.dto.order.OrderStatusRequest;
+import com.ecommerce.enums.OrderStatus;
 import com.ecommerce.enums.PaymentMethod;
 import com.ecommerce.mapper.OrderMapper;
 import com.ecommerce.model.Customer;
@@ -15,9 +17,15 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.aspectj.weaver.ast.Or;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,25 +42,21 @@ public class OrderService {
         Order order = orderMapper.toOrder(orderRequest);
         orderRepository.save(order);
 
+        String dateTimePart = order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String orderCode = "ORD" + dateTimePart;
+        order.setOrderCode(orderCode);
+
         List<OrderDetail> orderDetails = orderRequest.getProducts().stream().map(product -> {
             OrderDetail orderDetail = orderMapper.toOrderDetail(product);
             orderDetail.setOrder(order);
             return orderDetail;
         }).collect(Collectors.toList());
-
         orderDetailRepository.saveAll(orderDetails);
-        List<OrderDetailResponse> orderDetailResponses = orderMapper.toOrderDetailResponseList(orderDetails);
-        PaymentMethod method = orderRequest.getPaymentMethod();
-        OrderResponse orderResponse = new OrderResponse();
-        orderResponse.setOrderDetails(orderDetailResponses);
-        orderResponse.setId(order.getId());
-        orderResponse.setStatus(order.getStatus());
-        orderResponse.setTotalPrice(order.getTotalPrice());
-        orderResponse.setShippingAddress(order.getShippingAddress());
-        orderResponse.setShippingAmount(order.getShippingAmount());
-        orderResponse.setPaymentMethod(method);
-        orderRepository.save(order);
 
+
+        List<OrderDetailResponse> orderDetailResponses = orderMapper.toOrderDetailResponseList(orderDetails);
+        OrderResponse orderResponse = orderMapper.toOrderResponse(order);
+        orderRepository.save(order);
         return orderResponse;
     }
 
@@ -63,18 +67,7 @@ public class OrderService {
 
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Order order : orders) {
-            List<OrderDetailResponse> orderDetailResponses = orderMapper.toOrderDetailResponseList(order.getOrderDetails());
-            System.out.println(order.getOrderDetails().size());
-            OrderResponse orderResponse = new OrderResponse();
-            orderResponse.setId(order.getId());
-            orderResponse.setStatus(order.getStatus());
-            orderResponse.setTotalPrice(order.getTotalPrice());
-            orderResponse.setShippingAddress(order.getShippingAddress());
-            orderResponse.setOrderDetails(orderDetailResponses);
-            orderResponse.setShippingAmount(order.getShippingAmount());
-            orderResponse.setPaymentMethod(order.getPaymentMethod());
-            orderResponse.setOrderDate(order.getOrderDate());
-            orderResponse.setStatus(order.getStatus());
+            OrderResponse orderResponse = orderMapper.toOrderResponse(order);
             orderResponses.add(orderResponse);
         }
         return orderResponses;
@@ -95,4 +88,23 @@ public class OrderService {
         }
         return orderResponses;
     }
+
+    public List<String> getOrderStatus() {
+        return Arrays.stream(OrderStatus.values())
+                .map(OrderStatus::getValue)
+                .collect(Collectors.toList());
+    }
+
+    public List<OrderResponse> upDateOrderStatus(List<OrderStatusRequest> orderStatusRequests) {
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (OrderStatusRequest orderStatusRequest : orderStatusRequests) {
+            Order order = orderRepository.findById(orderStatusRequest.getOrderId()).orElse(null);
+            order.setStatus(OrderStatus.fromValue(orderStatusRequest.getStatus()));
+            orderRepository.save(order);
+            OrderResponse orderResponse = orderMapper.toOrderResponse(order);
+            orderResponses.add(orderResponse);
+        }
+        return orderResponses;
+    }
+
 }

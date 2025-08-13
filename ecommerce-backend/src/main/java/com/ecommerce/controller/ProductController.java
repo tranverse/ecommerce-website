@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/product")
@@ -64,9 +65,9 @@ public class ProductController {
 
 
     @GetMapping("/status")
-    public ResponseEntity<ApiResponse<List<ProductStatus>>> getProductStatus() {
+    public ResponseEntity<ApiResponse<List<String>>> getProductStatus() {
         return ResponseEntity.ok(
-                ApiResponse.<List<ProductStatus>>builder()
+                ApiResponse.<List<String>>builder()
                         .success(true)
                         .code("Product-s-add")
                         .message("Add product successfully")

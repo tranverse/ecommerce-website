@@ -1,9 +1,7 @@
 package com.ecommerce.dto.auth;
 
-import com.ecommerce.enums.EmployeeRole;
-import com.ecommerce.model.Employee;
+import com.ecommerce.dto.Employee.EmployeeResponse;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

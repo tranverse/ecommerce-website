@@ -1,6 +1,7 @@
 package com.ecommerce.config;
 
 import com.ecommerce.util.JwtFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,10 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 @Configuration
@@ -33,6 +36,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    private void writeJsonResponse(HttpServletResponse response, int status, String code, String message) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(status);
+        String json = String.format("{\"success\":false,\"code\":\"%s\",\"message\":\"%s\"}", code, message);
+        response.getWriter().write(json);
+        response.getWriter().flush();
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -46,6 +57,9 @@ public class SecurityConfig {
                     .requestMatchers("/auth/**").permitAll()
                     .anyRequest().authenticated()
                 )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, e)
+                                -> writeJsonResponse(response, HttpServletResponse.SC_UNAUTHORIZED, e.getClass().getName(), "Bạn không có quyền truy cập")))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -63,4 +77,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+
 }

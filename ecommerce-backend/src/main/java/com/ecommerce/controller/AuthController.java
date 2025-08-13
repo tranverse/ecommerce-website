@@ -1,10 +1,11 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.dto.ApiResponse;
+import com.ecommerce.dto.Employee.EmployeeResponse;
 import com.ecommerce.dto.auth.AuthCustomerLoginRequest;
 import com.ecommerce.dto.auth.AuthCustomerResponse;
 import com.ecommerce.dto.auth.AuthEmployeeResponse;
-import com.ecommerce.dto.auth.EmployeeRequest;
+import com.ecommerce.dto.Employee.EmployeeRequest;
 import com.ecommerce.dto.customer.CustomerRequest;
 import com.ecommerce.dto.customer.CustomerResponse;
 import com.ecommerce.model.Employee;
@@ -13,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,16 +45,6 @@ public class AuthController {
         );
     }
 
-    @PostMapping("/add-employee")
-    public ResponseEntity<ApiResponse<Employee>> addEmployee(@RequestBody EmployeeRequest employeeRequest) {
-        return ResponseEntity.ok(
-                ApiResponse.<Employee>builder()
-                        .message("Add new employee successfully")
-                        .data(authService.addEmployee(employeeRequest))
-                        .code("Employee-s-add")
-                        .build()
-        );
-    }
 
     @PostMapping("/employee/login")
     public ResponseEntity<ApiResponse<AuthEmployeeResponse>> employeeLogin(@RequestBody AuthCustomerLoginRequest loginRequest) {

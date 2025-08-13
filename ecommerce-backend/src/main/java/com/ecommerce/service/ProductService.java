@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,8 +78,8 @@ public class ProductService {
         return productMapper.toProductResponse(product);
     }
 
-    public List<ProductStatus> getProductStatuses() {
-        return Arrays.asList(ProductStatus.values());
+    public List<String> getProductStatuses() {
+        return Arrays.stream(ProductStatus.values()).map(ProductStatus::getValue).collect(Collectors.toList());
     }
 
 

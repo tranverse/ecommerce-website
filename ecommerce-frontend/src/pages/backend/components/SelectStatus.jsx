@@ -20,7 +20,7 @@ const SelectStatus = ({ item, label, name }) => {
             >
                 {item?.map((status, index) => (
                     <option key={index} value={status}>
-                        {status}
+                        {status.value}
                     </option>
                 ))}
                 {item.length == 0 && <option value="">No option</option>}

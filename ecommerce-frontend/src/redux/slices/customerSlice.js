@@ -21,7 +21,7 @@ const customerSlice = createSlice({
             localStorage.setItem('accessToken', state.accessToken)
             localStorage.setItem('customer', JSON.stringify(state.customer))
         },
-        logout(state){
+        logoutCustomer(state){
             state.accessToken = null,
             state.customer = null,
             state.isLoggedIn = false
@@ -31,5 +31,5 @@ const customerSlice = createSlice({
     }
 })
 
-export const {loginSuccess, logout} = customerSlice.actions
+export const {loginSuccess, logoutCustomer} = customerSlice.actions
 export default customerSlice.reducer

@@ -35,13 +35,14 @@ public class Customer {
     private CustomerTire tire;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<Address> addresses = new ArrayList<>();
+    private List<CustomerAddress> customerAddresses = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer")
     @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer")
+    @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 
     @OneToOne(mappedBy = "customer")

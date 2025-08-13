@@ -89,8 +89,8 @@ const AddProduct = () => {
 
         console.log(payload);
         const productResponse = await ProductService.addProduct(payload);
-        console.log(productResponse)
-        
+        console.log(productResponse);
+
         if (productResponse.data.success) {
             toast.success('Add product successfully');
             reset();

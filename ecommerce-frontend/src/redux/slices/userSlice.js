@@ -18,7 +18,7 @@ const employeeSlice = createSlice({
             localStorage.setItem('employeeAccessToken', action.payload.accessToken)
             localStorage.setItem('employee', JSON.stringify(action.payload.employee))
         },
-        employeeLogout(state){
+        logoutEmployee(state){
             state.employeeAccessToken = null
             state.employee = null
             state.isLoggedIn = false
@@ -29,5 +29,5 @@ const employeeSlice = createSlice({
     
 })
 
-export const {employeeLogin, employeeLogout} = employeeSlice.actions
+export const {employeeLogin, logoutEmployee} = employeeSlice.actions
 export default employeeSlice.reducer

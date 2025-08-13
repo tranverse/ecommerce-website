@@ -14,6 +14,14 @@ const OrderService = {
     getAllOrder(){
         return apiRequest(axiosInstance.get(URL + `/api/order/get-all`))
     },
-
+    getAllOrderById(orderId){
+        return apiRequest(axiosInstance.get(URL + `/api/order/detail/${orderId}`))
+    },
+    getOrderStatus(){
+        return apiRequest(axiosInstance.get(URL + `/api/order/status`))
+    },
+    updateOrderStatus(data){
+        return apiRequest(axiosInstance.put(URL + `/api/order/update-order-status`, data))
+    }
 }
 export default OrderService

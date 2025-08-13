@@ -1,5 +1,7 @@
 package com.ecommerce.service;
 
+import com.ecommerce.dto.Employee.EmployeeRequest;
+import com.ecommerce.dto.Employee.EmployeeResponse;
 import com.ecommerce.dto.auth.*;
 import com.ecommerce.dto.customer.CustomerRequest;
 import com.ecommerce.dto.customer.CustomerResponse;
@@ -7,15 +9,17 @@ import com.ecommerce.enums.CustomerTire;
 import com.ecommerce.enums.ErrorCode;
 import com.ecommerce.exception.AppException;
 import com.ecommerce.mapper.CustomerMapper;
+import com.ecommerce.mapper.EmployeeMapper;
+import com.ecommerce.model.Address;
 import com.ecommerce.model.Customer;
 import com.ecommerce.model.Employee;
+import com.ecommerce.repository.AddressRepository;
 import com.ecommerce.repository.CustomerRepository;
 import com.ecommerce.repository.EmployeeRepository;
 import com.ecommerce.util.JwtUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +33,8 @@ public class AuthService {
     final PasswordEncoder passwordEncoder;
     final EmployeeRepository employeeRepository;
     final JwtUtil jwtUtil;
+    final EmployeeMapper employeeMapper;
+
 
     public CustomerResponse addCustomer(CustomerRequest customerRequest) {
         if(customerRepository.existsByEmail(customerRequest.getEmail())) {
@@ -59,20 +65,6 @@ public class AuthService {
 
     }
 
-    public Employee addEmployee(EmployeeRequest employeeRequest) {
-        if(employeeRepository.existsByEmail(employeeRequest.getEmail())) {
-            throw new AppException(ErrorCode.EMAIL_EXISTED, HttpStatus.CONFLICT);
-        }
-        String hashedPassword = passwordEncoder.encode(employeeRequest.getPassword());
-        Employee employee = new Employee();
-        employee.setName(employeeRequest.getName());
-        employee.setEmail(employeeRequest.getEmail());
-        employee.setPhone(employeeRequest.getPhone());
-        employee.setRole(employeeRequest.getRole());
-        employee.setPassword(hashedPassword);
-        employeeRepository.save(employee);
-        return employee;
-    }
 
     public AuthEmployeeResponse employeeLogin(AuthCustomerLoginRequest loginRequest) {
         Employee employee = employeeRepository.findByEmail(loginRequest.getEmail()).orElseThrow(

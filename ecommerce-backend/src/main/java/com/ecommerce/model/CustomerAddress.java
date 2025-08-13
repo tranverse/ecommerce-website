@@ -1,6 +1,5 @@
 package com.ecommerce.model;
 
-import com.ecommerce.enums.EmployeeRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,30 +7,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
-public class Employee {
+@NoArgsConstructor
+public class CustomerAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String name;
+    private String customerName;
 
     private String phone;
 
-    private String email;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
-    private String password;
-
-    private String avatar;
-
-    @Enumerated(EnumType.STRING)
-    @Column(length = 50)
-    private EmployeeRole role;
-
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;
 }

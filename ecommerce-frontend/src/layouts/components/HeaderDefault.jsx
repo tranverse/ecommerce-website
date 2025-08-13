@@ -12,11 +12,11 @@ import CartService from '@services/cart.service';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart, resetHightlight } from '@redux/slices/cartSlice';
 import PopupCart from '@pages/Cart/PopupCart';
-import { logout } from '@redux/slices/customerSlice';
 import { toast } from 'react-toastify';
 import CategoryService from '@services/category.service';
 import ProductItem from '@components/product/ProductItem';
 import ProductService from '@services/product.service';
+import { logoutCustomer } from '@redux/slices/customerSlice';
 function Header() {
     const dispatch = useDispatch();
     const isLoggedIn = useSelector((state) => state.customer.isLoggedIn);
@@ -59,8 +59,8 @@ function Header() {
     }, [dispatch]);
 
     const handleLogOut = () => {
-        dispatch(logout());
-        toast.success('Log out successfully');
+        dispatch(logoutCustomer());
+        toast.success('Đăng xuất thành công');
     };
 
     const handleMouseEnter = (menu) => {

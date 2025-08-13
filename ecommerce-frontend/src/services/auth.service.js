@@ -11,6 +11,7 @@ const AuthService = {
     },
     employeeLogin(data){
         return apiRequest(axiosInstance.post(URL + "/auth/employee/login", data))
-    }
+    },
+
 }
 export default AuthService

@@ -16,10 +16,6 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String customerName;
-
-    private String phone;
-
     private String province;
 
     private String district;
@@ -28,7 +24,6 @@ public class Address {
 
     private String details;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+
+
 }

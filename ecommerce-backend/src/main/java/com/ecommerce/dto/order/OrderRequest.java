@@ -20,6 +20,8 @@ public class OrderRequest {
 
     private BigDecimal totalPrice;
 
+    private BigDecimal totalProductPrice;
+
     private BigDecimal discountPrice;
 
     private String shippingAddress;

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import FormWrapper from '@components/Form';
 import InputField from '@components/Form/InputField';
-import SelectCategory from '../components/SelectCategory';
 import CategoryService from '@services/category.service';
 import { toast } from 'react-toastify';
 import UploadImage from '../components/UploadThumbnail';
 import SubmitButton from '@components/Form/SubmitButton';
 import UploadService from '@services/upload.service';
+import SelectOption from '@pages/backend/components/SelectOption';
 const AddCategory = () => {
     const [parentCategories, setParentCategories] = useState([]);
     const [url, setUrl] = useState('');
@@ -57,12 +57,7 @@ const AddCategory = () => {
             <FormWrapper onSubmit={handleAddCategory}>
                 <div className="flex flex-col gap-4    ">
                     <InputField Element={'input'} name={'name'} label={'Name'} />
-                    <SelectCategory
-                        items={parentCategories}
-                        name={'parentCategory'}
-                        label={'Parent category'}
-                        isAdd={true}
-                    />
+                    <SelectOption items={parentCategories} name={'parentCategory'} label={'Parent category'} isAdd={true} />
                     <div className="m-1">
                         <div className="flex  items-center gap-2">
                             <p>Thumbnail</p>

@@ -36,7 +36,7 @@ function AdminSidebar() {
             Icon: FaUsers,
             children: [
                 { menu: 'Thêm nhân viên', link: '/user/add-employee' },
-                { menu: 'Danh sách nhân viên', link: '/user/emoloyee-list' },
+                { menu: 'Danh sách nhân viên', link: '/user/employee-list' },
             ],
         },
         {
@@ -77,6 +77,7 @@ function AdminSidebar() {
 
             <div className="mt-2 overflow-y-auto h-[650px]  ">
                 {menuItems?.map((menu, index) => (
+                    
                     <AdminMenuItem
                         name={menu.name}
                         Icon={menu.Icon}

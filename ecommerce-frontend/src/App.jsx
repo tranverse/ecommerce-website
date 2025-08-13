@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import routes from './router';
 import { ToastContainer, toast } from 'react-toastify';
-
+import ProtectedRoute from '@router/ProtectedRoute';
 function App() {
     return (
         <>
@@ -10,22 +10,26 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     {routes.map((route, index) => {
-                        const { Layout, Page } = route;
+                        const { Layout, Page, protected: isProtected, allowRoles = [] } = route;
+                        const element =
+                            Layout == null ? (
+                                <>
+                                    <React.Fragment>
+                                        <Page />
+                                    </React.Fragment>
+                                </>
+                            ) : (
+                                <>
+                                    <Layout {...(route.layoutProps || '')}>
+                                        <Page />
+                                    </Layout>
+                                </>
+                            );
                         return (
                             <Route
                                 path={route.path}
                                 key={index}
-                                element={
-                                    Layout == null ? (
-                                        <React.Fragment>
-                                            <Page />
-                                        </React.Fragment>
-                                    ) : (
-                                        <Layout {...(route.layoutProps || '')}>
-                                            <Page />
-                                        </Layout>
-                                    )
-                                }
+                                element={isProtected ? <ProtectedRoute children={element} allowRoles={allowRoles} /> : element}
                             />
                         );
                     })}
