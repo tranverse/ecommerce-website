@@ -1,6 +1,5 @@
 package com.ecommerce.service;
 
-import com.ecommerce.dto.Employee.EmployeeRequest;
 import com.ecommerce.dto.Employee.EmployeeResponse;
 import com.ecommerce.dto.auth.*;
 import com.ecommerce.dto.customer.CustomerRequest;
@@ -10,10 +9,8 @@ import com.ecommerce.enums.ErrorCode;
 import com.ecommerce.exception.AppException;
 import com.ecommerce.mapper.CustomerMapper;
 import com.ecommerce.mapper.EmployeeMapper;
-import com.ecommerce.model.Address;
 import com.ecommerce.model.Customer;
 import com.ecommerce.model.Employee;
-import com.ecommerce.repository.AddressRepository;
 import com.ecommerce.repository.CustomerRepository;
 import com.ecommerce.repository.EmployeeRepository;
 import com.ecommerce.util.JwtUtil;
@@ -84,5 +81,43 @@ public class AuthService {
 
         return new AuthEmployeeResponse(token, employeeResponse);
     }
+
+    public Customer updateCustomer(CustomerUpdateRequest customerRequest, String id) {
+
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND, HttpStatus.NOT_FOUND));
+
+        if (customerRequest.getName() != null) {
+            customer.setName(customerRequest.getName());
+        }
+        if (customerRequest.getEmail() != null) {
+            customer.setEmail(customerRequest.getEmail());
+        }
+        if (customerRequest.getPhone() != null) {
+            customer.setPhone(customerRequest.getPhone());
+        }
+
+         customerRepository.save(customer);
+
+
+        return customer;
+    }
+
+    public Void customerChangePassword(CustomerUpdatePasswordRequest request, String id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND, HttpStatus.NOT_FOUND));
+
+        if (!passwordEncoder.matches(request.getOldPassword(), customer.getPassword())) {
+            throw new AppException(ErrorCode.INVALID_PASSWORD, HttpStatus.BAD_REQUEST);
+        }
+
+        if (request.getOldPassword().equals(request.getNewPassword())) {
+            throw new AppException(ErrorCode.SAME_PASSWORD, HttpStatus.BAD_REQUEST);
+        }
+        customer.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        customerRepository.save(customer);
+        return null;
+    }
+
 
 }

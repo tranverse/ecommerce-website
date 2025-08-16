@@ -24,7 +24,6 @@ const EmployeeForm = ({ initialValues = null, onSubmit, isView }) => {
     const [chosenRole, setChosenRole] = useState(initialValues?.role || '');
     const [url, setUrl] = useState(initialValues?.avatar || '');
     const [avatar, setAvatar] = useState(null);
-    console.log(isView);
     const defaultValues = {
         name: initialValues?.name || '',
         email: initialValues?.email || '',
@@ -49,7 +48,6 @@ const EmployeeForm = ({ initialValues = null, onSubmit, isView }) => {
 
     useEffect(() => {
         const fetchProvinces = async () => {
-            // if (!selectedProvince) return setProvinces([]);
             const response = await AddressService.getProvince();
             setProvinces(response);
         };

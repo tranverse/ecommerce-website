@@ -7,6 +7,8 @@ import { GiStoneBlock } from 'react-icons/gi';
 import { FaUsers } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
 import { Icon } from 'lucide-react';
+import { LuTicketCheck } from 'react-icons/lu';
+import { MdBrokenImage } from 'react-icons/md';
 function AdminSidebar() {
     const [menuState, setMenuState] = useState({});
     const toggleMenu = (index) => {
@@ -15,6 +17,14 @@ function AdminSidebar() {
     console.log(menuState);
     const menuItems = [
         { name: 'Dashboard', Icon: IoHomeOutline, children: [] },
+        {
+            name: 'Loại sản phẩm',
+            Icon: GiStoneBlock,
+            children: [
+                { menu: 'Thêm loại sản phẩm', link: '/user/add-category' },
+                { menu: 'Danh sách loại sản phẩm', link: '/user/category-list' },
+            ],
+        },
         {
             name: 'Sản phẩm',
             Icon: LuBlocks,
@@ -28,7 +38,6 @@ function AdminSidebar() {
             Icon: GiStoneBlock,
             children: [
                 { menu: 'Danh sách đơn hàng', link: '/user/all-order-list' },
-                { menu: 'Đơn hàng chưa duyệt', link: '/user/pending-order-list' },
             ],
         },
         {
@@ -41,7 +50,7 @@ function AdminSidebar() {
         },
         {
             name: 'Banner',
-            Icon: GiStoneBlock,
+            Icon: MdBrokenImage,
             children: [
                 { menu: 'Thêm banner', link: '/user/add-banner' },
                 { menu: 'Danh sách banner', link: '/user/banner-list' },
@@ -49,18 +58,10 @@ function AdminSidebar() {
         },
         {
             name: 'Voucher',
-            Icon: GiStoneBlock,
+            Icon: LuTicketCheck,
             children: [
                 { menu: 'Thêm voucher', link: '/user/add-voucher' },
                 { menu: 'Danh sách voucher', link: '/user/voucher-list' },
-            ],
-        },
-        {
-            name: 'Category',
-            Icon: GiStoneBlock,
-            children: [
-                { menu: 'Thêm loại sản phẩm', link: '/user/add-category' },
-                { menu: 'Danh sách loại sản phẩm', link: '/user/category-list' },
             ],
         },
     ];
@@ -77,7 +78,6 @@ function AdminSidebar() {
 
             <div className="mt-2 overflow-y-auto h-[650px]  ">
                 {menuItems?.map((menu, index) => (
-                    
                     <AdminMenuItem
                         name={menu.name}
                         Icon={menu.Icon}

@@ -6,8 +6,16 @@ const BannerService = {
         return apiRequest(axiosInstance.post(URL + "/api/banner", payload))
     },
     getBannersInTime(){
+        return apiRequest(axiosInstance.get(URL + "/api/banner/in-time"))
+    },
+    getAllBanner(){
         return apiRequest(axiosInstance.get(URL + "/api/banner"))
-
+    },
+    getBannerById(id){
+        return apiRequest(axiosInstance.get(URL + `/api/banner/${id}`))
+    },
+    updateBanner(id, data){
+        return apiRequest(axiosInstance.put(URL + `/api/banner/${id}`, data))       
     }
 }
 

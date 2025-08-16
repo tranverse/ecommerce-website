@@ -30,4 +30,36 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAllByParentCategoryIsNull();
         return categoryMapper.toCategoryResponseList(categories);
     }
+
+    public CategoryResponse getCategoryById(String categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+        return categoryMapper.toCategoryResponse(category);
+    }
+
+    public CategoryResponse updateCategory(String categoryId, CategoryRequest categoryRequest) {
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+        System.out.println(categoryRequest.getName());
+        if (categoryRequest.getName() != null) {
+            category.setName(categoryRequest.getName());
+        }
+        if (categoryRequest.getThumbnail() != null) {
+            category.setThumbnail(categoryRequest.getThumbnail());
+        }
+
+        if (category.getSubCategories() != null && !category.getSubCategories().isEmpty()) {
+            category.setParentCategory(null);
+        } else {
+            if (categoryRequest.getParentCategory() != null && categoryRequest.getParentCategory().getId() != null) {
+                Category parent = categoryRepository.findById(categoryRequest.getParentCategory().getId())
+                        .orElseThrow(() -> new RuntimeException("Parent category not found"));
+                category.setParentCategory(parent);
+            } else {
+                category.setParentCategory(null);
+            }
+        }
+
+       categoryRepository.save(category);
+
+        return categoryMapper.toCategoryResponse(category);
+    }
 }

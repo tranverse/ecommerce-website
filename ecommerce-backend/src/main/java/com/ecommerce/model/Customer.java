@@ -35,6 +35,7 @@ public class Customer {
     private CustomerTire tire;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<CustomerAddress> customerAddresses = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer")

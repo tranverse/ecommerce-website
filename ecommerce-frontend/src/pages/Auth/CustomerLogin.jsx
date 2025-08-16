@@ -17,10 +17,9 @@ const CustomerLogin = () => {
             type: 'CUSTOMER',
         };
         const response = await AuthService.customerLogin(payload);
-        console.log(response);
 
-        dispatch(loginSuccess(response.data.data));
         if (response.data.success) {
+            dispatch(loginSuccess(response.data.data));
             navigate('/');
             toast.success(response.data.message);
         } else {

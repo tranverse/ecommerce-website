@@ -7,7 +7,7 @@ import Navbar from '@layouts/components/Navbar';
 import { BsList } from 'react-icons/bs';
 import { use, useEffect, useRef, useState } from 'react';
 import DropdownItem from '@layouts/components/DropdownItem';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CartService from '@services/cart.service';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart, resetHightlight } from '@redux/slices/cartSlice';
@@ -29,6 +29,7 @@ function Header() {
     const [productsOnSale, setProductsOnSale] = useState([]);
     const hoverTimeout = useRef();
     const [hoverMenuPopup, setHoverMenuPopUp] = useState('');
+    const navigate = useNavigate();
     const getProductOnSale = async () => {
         try {
             const response = await ProductService.getAllProductOnSale();
@@ -61,6 +62,7 @@ function Header() {
     const handleLogOut = () => {
         dispatch(logoutCustomer());
         toast.success('Đăng xuất thành công');
+        navigate('/');
     };
 
     const handleMouseEnter = (menu) => {
@@ -184,27 +186,34 @@ function Header() {
                             {categories?.map((cate, index) => (
                                 <div className=" flex gap-10  " key={index}>
                                     <div className="border-r cursor-pointer border-gray-300  pr-10 ">
-                                        <div className="flex flex-col gap-2   items-center  ">
-                                            <img
-                                                src={cate?.thumbnail}
-                                                className="   rounded-full w-16 object-cover h-16 "
-                                                alt=""
-                                            />
-                                            <p className="font-bold  border-gray-300 mb-1 text-gray-700  ">{cate?.name}</p>
-                                        </div>
+                                        <Link to={`/products?filter=${cate?.name}`}>
+                                            <div className="flex flex-col gap-2   items-center  ">
+                                                <img
+                                                    src={cate?.thumbnail}
+                                                    className="   rounded-full w-16 object-cover h-16 "
+                                                    alt=""
+                                                />
+                                                <p className="font-bold  border-gray-300 mb-1 text-gray-700  ">{cate?.name}</p>
+                                            </div>
+                                        </Link>
                                     </div>
                                     <div className="flex gap-5  ">
                                         {cate?.subCategories?.map((sub, index2) => (
-                                            <div className="flex flex-col gap-2   cursor-pointer  items-center  " key={index2}>
-                                                <img
-                                                    src={sub?.thumbnail}
-                                                    className="rounded-full w-16 object-cover h-16 "
-                                                    alt=""
-                                                />
-                                                <p className="text-sm line-clamp-1  border-gray-300 mb-1 text-gray-700  ">
-                                                    {sub?.name}
-                                                </p>
-                                            </div>
+                                            <Link to={`/products?filter=${sub?.name}`}>
+                                                <div
+                                                    className="flex flex-col gap-2   cursor-pointer  items-center  "
+                                                    key={index2}
+                                                >
+                                                    <img
+                                                        src={sub?.thumbnail}
+                                                        className="rounded-full w-16 object-cover h-16 "
+                                                        alt=""
+                                                    />
+                                                    <p className="text-sm line-clamp-1  border-gray-300 mb-1 text-gray-700  ">
+                                                        {sub?.name}
+                                                    </p>
+                                                </div>
+                                            </Link>
                                         ))}
                                     </div>
                                 </div>

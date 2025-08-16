@@ -2,8 +2,11 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
 const SelectStatus = ({ item, label, name }) => {
-    const { register } = useFormContext();
-
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext();
+    console.log(item)
     return (
         <div className="text-gray-700 text-sm w-full  ">
             <div className="flex items-center gap-2">
@@ -13,18 +16,18 @@ const SelectStatus = ({ item, label, name }) => {
                 <span className="text-red-500">*</span>
             </div>
             <select
-                defaultValue={item[0]}
                 id={name}
-                {...register(name)}
+                {...register(name, { required: 'Trạng thái sản phẩm là bắt buộc' })}
                 className="w-full cursor-pointer border border-gray-300 p-2 outline-none rounded-md "
             >
+                <option value="">Chọn loại trạng thái sản phẩm</option>
                 {item?.map((status, index) => (
                     <option key={index} value={status}>
-                        {status.value}
+                        {status}
                     </option>
                 ))}
-                {item.length == 0 && <option value="">No option</option>}
             </select>
+            {errors.status && <p className="text-red-500 text-sm italic  mt-1">{errors.status.message}</p>}
         </div>
     );
 };

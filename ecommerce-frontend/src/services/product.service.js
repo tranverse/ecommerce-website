@@ -26,6 +26,15 @@ const ProductService = {
     },
     getTopSellingProduct(){
         return apiRequest(axiosInstance.get(URL + '/api/product/top-selling'))
+    },
+    deleteProduct(id){
+        return apiRequest(axiosInstance.delete(URL + `/api/product/${id}`))
+    },
+    updateProduct(id, data){
+        return apiRequest(axiosInstance.put(URL + `/api/product/${id}`, data))
+    },
+    getReviewsOfProduct(productId){
+        return apiRequest(axiosInstance.get(URL + `/api/review/${productId}`,))
     }
 }
 

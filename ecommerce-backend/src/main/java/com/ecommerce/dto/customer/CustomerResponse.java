@@ -4,8 +4,10 @@ import com.ecommerce.enums.CustomerTire;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class CustomerResponse {
     private String id;
     private String name;

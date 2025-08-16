@@ -8,6 +8,13 @@ const CategoryService = {
     },
     addCategory(data){
          return apiRequest(axiosInstance.post(URL + '/api/category', data))
+    },
+    getCategoryById(id){
+        return apiRequest(axiosInstance.get(URL + `/api/category/${id}`))
+        
+    },
+    updateCategory(id, data){
+         return apiRequest(axiosInstance.put(URL + `/api/category/${id}`, data))
 
     }
 }

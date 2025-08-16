@@ -12,6 +12,8 @@ import CategoryService from '@services/category.service';
 import SearchBox from '@layouts/components/SearchBox';
 import { IoIosSearch } from 'react-icons/io';
 import SearchItem from '../components/SearchItem';
+import { toast } from 'react-toastify';
+import DeleteModal from '../components/DeleteModal';
 const ListProduct = () => {
     const [products, setProducts] = useState([]);
     const [categories, setCatgories] = useState([]);
@@ -19,6 +21,11 @@ const ListProduct = () => {
     const [chosenProducts, setChosenProduct] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [showProducts, setShowProducts] = useState([]);
+    const [deleteModal, setDeleteModal] = useState(false);
+    const [deleteProduct, setDeleteProduct] = useState({});
+    const [selectCategory, setSelectCategory] = useState('');
+    const [selectStatus, setSelectStatus] = useState('');
+
     const getAllProduct = async () => {
         const response = await ProductService.getAllProduct();
 
@@ -53,6 +60,33 @@ const ListProduct = () => {
         );
         setShowProducts(showProducts);
     };
+    const handleDeleteConfirm = async () => {
+        const response = await ProductService.deleteProduct(deleteProduct?.id);
+        console.log(response);
+        if (response.data.success) {
+            toast.success(response.data.message);
+        }
+        getAllProduct();
+    };
+
+    useEffect(() => {
+        let filtered = products;
+
+        if (selectCategory && selectCategory.toLowerCase() !== 'all') {
+            filtered = filtered.filter((pro) => pro.category?.name.toLowerCase() === selectCategory.toLowerCase());
+        }
+
+        if (selectStatus && selectStatus.toLowerCase() !== 'all') {
+            filtered = filtered.filter((pro) => pro.status.toLowerCase() === selectStatus.toLowerCase());
+        }
+
+        if (searchValue) {
+            filtered = filtered.filter((pro) => pro.name.toLowerCase().includes(searchValue.toLowerCase()));
+        }
+
+        setShowProducts(filtered);
+    }, [products, selectCategory, selectStatus, searchValue]);
+
     return (
         <div className="   ">
             <div className="bg-white p-4 my-2 flex    justify-between  ">
@@ -60,10 +94,20 @@ const ListProduct = () => {
                     <SearchItem placeholder={'Nhập thông tin sản phẩm'} value={searchValue} onChange={handleSearchValueChange} />
                 </div>
                 <div className="w-1/5">
-                    <SelectOption items={categories} name={'Loại sản phẩm'} />
+                    <SelectOption
+                        items={categories}
+                        name={'Loại sản phẩm'}
+                        chosenItem={selectCategory}
+                        setChosenItem={setSelectCategory}
+                    />
                 </div>
                 <div className="w-1/5">
-                    <SelectOption items={productStatuses} name={'Trạng thái'} />
+                    <SelectOption
+                        items={productStatuses}
+                        name={'Trạng thái'}
+                        chosenItem={selectStatus}
+                        setChosenItem={setSelectStatus}
+                    />
                 </div>
             </div>
             <div className="bg-white p-4">
@@ -115,11 +159,18 @@ const ListProduct = () => {
                                     </td>
                                     <td className="    ">
                                         <div className="flex gap-1 items-center justify-center">
-                                            <Link to={`/user/product/view-detail/${product.id}`}>
+                                            <Link to={`/user/view-product/${product.id}`}>
                                                 <FaRegEye className="cursor-pointer text-[var(--primary)] text-lg  " />
                                             </Link>
-                                            <TbCheckupList className="cursor-pointer text-[var(--primary)] text-lg  " />
-                                            <MdOutlineDelete className="cursor-pointer text-red-500 text-lg " />
+                                            <Link to={`/user/update-product/${product?.id}`}>
+                                                <TbCheckupList className="cursor-pointer text-[var(--primary)] text-lg  " />
+                                            </Link>
+                                            <MdOutlineDelete
+                                                className="cursor-pointer text-red-500 text-lg "
+                                                onClick={() => {
+                                                    (setDeleteModal(true), setDeleteProduct(product));
+                                                }}
+                                            />
                                         </div>
                                     </td>
                                 </tr>
@@ -128,6 +179,14 @@ const ListProduct = () => {
                     </tbody>
                 </table>
             </div>
+            {deleteModal && (
+                <DeleteModal
+                    deleteModal={deleteModal}
+                    setDeleteModal={setDeleteModal}
+                    itemName="Bạn có muốn xóa sản pẩm này không?"
+                    onConfirm={handleDeleteConfirm}
+                />
+            )}
         </div>
     );
 };

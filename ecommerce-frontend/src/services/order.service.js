@@ -22,6 +22,12 @@ const OrderService = {
     },
     updateOrderStatus(data){
         return apiRequest(axiosInstance.put(URL + `/api/order/update-order-status`, data))
+    },
+    cancelOrder(orderId){
+        return apiRequest(axiosInstance.put(URL + `/api/order/cancel/${orderId}`))
+    },
+    addReview(data){
+        return apiRequest(axiosInstance.post(URL + `/api/review`, data))
     }
 }
 export default OrderService

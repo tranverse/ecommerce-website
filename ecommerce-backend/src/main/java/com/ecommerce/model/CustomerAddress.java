@@ -1,16 +1,14 @@
 package com.ecommerce.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CustomerAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -23,6 +21,8 @@ public class CustomerAddress {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    private Boolean isDefault;
 
     @OneToOne
     @JoinColumn(name = "address_id")

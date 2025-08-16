@@ -33,7 +33,7 @@ public class Banner {
     @DateTimeFormat(pattern = "dd-MM-YYYY")
     LocalDate endDate;
 
-    Boolean isActive = true;
+    Boolean active;
 
     Integer priority;
 

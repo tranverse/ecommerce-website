@@ -20,4 +20,6 @@ public class BannerRequest {
     LocalDate endDate;
 
     Integer priority;
+
+    Boolean isActive;
 }

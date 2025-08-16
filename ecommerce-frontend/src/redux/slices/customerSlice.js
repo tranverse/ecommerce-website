@@ -27,9 +27,14 @@ const customerSlice = createSlice({
             state.isLoggedIn = false
             localStorage.removeItem('accessToken')
             localStorage.removeItem('customer')
-        }
+        },
+        updateCustomer(state, action){
+            state.customer = action.payload
+            localStorage.removeItem('customer')
+            localStorage.setItem('customer', JSON.stringify(state.customer))
+        },
     }
 })
 
-export const {loginSuccess, logoutCustomer} = customerSlice.actions
+export const {loginSuccess, logoutCustomer, updateCustomer} = customerSlice.actions
 export default customerSlice.reducer

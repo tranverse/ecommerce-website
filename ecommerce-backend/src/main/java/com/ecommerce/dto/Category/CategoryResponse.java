@@ -13,4 +13,6 @@ public class CategoryResponse {
     private String name;
     private String thumbnail;
     private List<Category> subCategories;
+    private Category parentCategory;
+
 }

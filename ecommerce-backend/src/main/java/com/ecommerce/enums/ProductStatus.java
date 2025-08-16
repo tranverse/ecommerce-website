@@ -19,4 +19,13 @@ public enum ProductStatus {
         return value;
     }
 
+
+    public static ProductStatus fromValue(String v) {
+        for (ProductStatus c : ProductStatus.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        return null;
+    }
 }

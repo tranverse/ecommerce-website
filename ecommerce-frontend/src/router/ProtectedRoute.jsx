@@ -1,18 +1,26 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { Navigate } from 'react-router-dom';
-const ProtectedRoute = ({ children, allowRoles }) => {
-    const navigate = useNavigate();
-    const token = useSelector((state) => state.employee?.employeeAccessToken);
-    const role = useSelector((state) => state.employee?.employee?.role);
+import { toast } from 'react-toastify';
+
+const ProtectedRoute = ({ children, allowRoles, userType }) => {
+    let token, role;
+
+    if (userType === 'employee') {
+        token = useSelector((state) => state.employee?.employeeAccessToken);
+        role = useSelector((state) => state.employee?.employee?.role);
+    } else if (userType === 'customer') {
+        token = useSelector((state) => state.customer?.accessToken);
+        role = useSelector((state) => state.customer?.customer?.role);
+    }
+
     if (!token) {
         toast.warning('Bạn cần đăng nhập trước khi truy cập hệ thống');
-        return <Navigate to={'/user/login'} replace />;
+        return userType === 'employee' ? <Navigate to="/user/login" replace /> : <Navigate to="/customer/login" replace />;
     }
-    if (allowRoles && !allowRoles.some((r) => r.role == role)) {
-        return <Navigate to={'/unauthorize'} replace />;
+
+    if (allowRoles && role && !allowRoles.some((r) => r.role === role)) {
+        return <Navigate to="/unauthorize" replace />;
     }
 
     return children;

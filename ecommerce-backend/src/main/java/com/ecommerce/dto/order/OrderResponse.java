@@ -30,7 +30,9 @@ public class OrderResponse {
 
     private String shippingAddress;
 
-    private BigDecimal discountPrice;
+    private String shippingPhone;
+
+    private String shippingCustomerName;
 
     private OrderStatus status;
 

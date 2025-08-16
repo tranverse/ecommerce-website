@@ -62,7 +62,23 @@ public class ProductController {
                         .build()
         );
     }
-
+    @PutMapping("/{productId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(@PathVariable String productId,
+                                                                      @RequestBody ProductRequest productRequest,
+                                                                      @RequestHeader("Authorization") String authHeader) {
+        System.out.println("Authorization header: " + authHeader); // in token
+        String token = authHeader.replace("Bearer ", "");
+        System.out.println("Token chỉ: " + token);
+        return ResponseEntity.ok(
+                ApiResponse.<ProductResponse>builder()
+                        .success(true)
+                        .code("Product-s-update")
+                        .message("Update product successfully")
+                        .data(productService.updateProduct(productId, productRequest))
+                        .build()
+        );
+    }
 
     @GetMapping("/status")
     public ResponseEntity<ApiResponse<List<String>>> getProductStatus() {
@@ -83,7 +99,7 @@ public class ProductController {
                         .success(true)
                         .code("Product-s-get-on-sale")
                         .message("Get product on sale successfully")
-                        .data(productService.getAllProductAllSale())
+                        .data(productService.getAllProductOnSale())
                         .build()
         );
     }
@@ -96,6 +112,18 @@ public class ProductController {
                         .code("Product-s-get-top-selling")
                         .message("Get top five product selling successfully")
                         .data(productService.getTopFiveProducts())
+                        .build()
+        );
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable String productId) {
+        return ResponseEntity.ok(
+                ApiResponse.<Void>builder()
+                        .success(true)
+                        .code("Product-s-delete")
+                        .message("Delete product successfully")
+                        .data(productService.deleteProduct(productId))
                         .build()
         );
     }

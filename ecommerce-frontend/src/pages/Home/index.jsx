@@ -73,29 +73,33 @@ const Home = () => {
     return (
         <div className="mt-20  ">
             <section className="">
-                <div className="relative w-full h-[550px] overflow-hidden ">
-                    {banners?.map((banner, index) => (
-                        <img
-                            src={banner?.imgUrl}
-                            className={`w-full h-full transition-opacity  absolute
+                {banners?.length > 0 && (
+                    <div className="relative w-full h-[550px] overflow-hidden ">
+                        {banners?.map((banner, index) => (
+                            <img
+                                src={banner?.imgUrl}
+                                className={`w-full h-full transition-opacity  absolute
                                ${currentIdex === index ? 'opacity-100' : 'opacity-0'}`}
-                            key={index}
-                        />
-                    ))}
-                    <div className="flex gap-4 absolute bottom-2 z-10 transform -translate-x-1/2  left-1/2   ">
-                        {banners?.map((_, index) => (
-                            <div
-                                onClick={() => handleClickBanner(index)}
-                                className={`w-4 h-4 border border-gray-300  rounded-full cursor-pointer 
-                                  ${currentIdex == index ? 'bg-[var(--primary)] ' : 'bg-white'}`}
                                 key={index}
-                            ></div>
+                            />
                         ))}
+                        <div className="flex gap-4 absolute bottom-2 z-10 transform -translate-x-1/2  left-1/2   ">
+                            {banners?.map((_, index) => (
+                                <div
+                                    onClick={() => handleClickBanner(index)}
+                                    className={`w-4 h-4 border border-gray-300  rounded-full cursor-pointer 
+                                  ${currentIdex == index ? 'bg-[var(--primary)] ' : 'bg-white'}`}
+                                    key={index}
+                                ></div>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
             </section>
 
             <section className="my-20  ">
+                <h1 className="uppercase text-center my-10 text-[var(--primary)] text-3xl ">Loại sản phẩm</h1>
+
                 <div className="relative   w-full ">
                     <IoIosArrowBack
                         onClick={scrollLeft}
@@ -130,19 +134,19 @@ const Home = () => {
                 </div>
             </section>
 
-            <section className='my-32'>
-                <h1 className="uppercase text-center my-10 text-[var(--primary)] text-3xl ">Product on sale</h1>
+            <section className="my-32">
+                <h1 className="uppercase text-center my-10 text-[var(--primary)] text-3xl ">Sản phẩm giảm giá</h1>
                 <div className="grid grid-cols-5 gap-4 ">
                     {productsOnSale?.map((product, index) => (
                         <Link to={`/product/${product?.slug}?id=${product?.id}`} key={index}>
                             <ProductItem product={product} key={index}></ProductItem>
                         </Link>
                     ))}
-                </div> 
+                </div>
             </section>
 
             <section className="my-32  ">
-                <h1 className="uppercase text-center my-10  text-[var(--primary)] text-3xl ">Top selling product</h1>
+                <h1 className="uppercase text-center my-10  text-[var(--primary)] text-3xl ">Sản phẩm bán chạy</h1>
                 <div className="grid grid-cols-5 gap-4 ">
                     {topSellingProduct?.map((product, index) => (
                         <Link to={`/product/${product?.slug}?id=${product?.id}`} key={index}>

@@ -4,6 +4,7 @@ import Product from '@pages/Product';
 import { useEffect, useState } from 'react';
 import ProductService from '@services/product.service';
 import { color } from '@mui/system';
+import { useLocation } from 'react-router-dom';
 function ProductLayout({ children }) {
     const [type, setType] = useState();
     const [value, setValue] = useState();
@@ -11,9 +12,12 @@ function ProductLayout({ children }) {
     const [showProducts, setShowProducts] = useState([]);
     const [startPrice, setStartPrice] = useState('');
     const [endPrice, setEndPrice] = useState('');
+    const location = useLocation();
+    const query = new URLSearchParams(location.search);
+    const filter = query.get('filter');
     const getAllProducts = async () => {
         const response = await ProductService.getAllProduct();
-        console.log(response)
+        console.log(response);
         if (response.data.success) {
             setProducts(response.data.data);
             setShowProducts(response.data.data);
@@ -40,6 +44,18 @@ function ProductLayout({ children }) {
     useEffect(() => {
         getAllProducts();
     }, []);
+
+    useEffect(() => {
+        if (!products || products.length === 0) return;
+
+        if (filter === 'sale') {
+            setShowProducts(products.filter((product) => product.discountPercentage > 0));
+        } else if (filter) {
+            setShowProducts(products.filter((product) => product.category.name === filter));
+        } else {
+            setShowProducts(products);
+        }
+    }, [filter, products]);
 
     useEffect(() => {
         if (type == 'category') {

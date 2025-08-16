@@ -31,13 +31,46 @@ public class BannerController {
         );
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<Banner>>> getBanner() {
+    @GetMapping("/in-time")
+    public ResponseEntity<ApiResponse<List<Banner>>> getBannerInTime() {
         return ResponseEntity.ok(
                 ApiResponse.<List<Banner>>builder()
-                        .message("Add banner successfully")
+                        .message("Get banner successfully")
                         .data(bannerService.getBannersInTime())
-                        .code("Banner-s-add")
+                        .code("Banner-s-get-in-time")
+                        .build()
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<Banner>>> getAllBanners() {
+        return ResponseEntity.ok(
+                ApiResponse.<List<Banner>>builder()
+                        .message("Get all banner successfully")
+                        .data(bannerService.getAllBanners())
+                        .code("Banner-s-get-all-banners")
+                        .build()
+        );
+    }
+    @GetMapping("/{bannerId}")
+    public ResponseEntity<ApiResponse<Banner>> getBannerById(@PathVariable String bannerId) {
+        return ResponseEntity.ok(
+                ApiResponse.<Banner>builder()
+                        .message("Get banner successfully")
+                        .data(bannerService.getBannerById(bannerId))
+                        .code("Banner-s-get")
+                        .build()
+        );
+    }
+
+    @PutMapping("/{bannerId}")
+    public ResponseEntity<ApiResponse<Banner>> updateBanner(@PathVariable String bannerId,
+                                                            @RequestBody BannerRequest bannerRequest) {
+        return ResponseEntity.ok(
+                ApiResponse.<Banner>builder()
+                        .message("Update banner successfully")
+                        .data(bannerService.updateBanner(bannerId, bannerRequest))
+                        .code("Banner-s-update")
                         .build()
         );
     }

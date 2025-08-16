@@ -30,6 +30,10 @@ public class OrderRequest {
 
     private Customer customer;
 
+    private String shippingPhone;
+
+    private String shippingCustomerName;
+
     private BigDecimal shippingAmount;
 
     @Enumerated(EnumType.STRING)

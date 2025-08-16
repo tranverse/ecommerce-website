@@ -13,7 +13,6 @@ const InputField = ({ name, label, type, placeholder, Element, className, readOn
     const [showPass, setShowPass] = useState(false);
     const validateField =
         name === 'repassword' ? (value) => value === getValues('password') || 'Password does not match' : undefined;
-
     return (
         <div className="flex flex-col gap-0 my-1 w-full">
             <div className="flex items-center gap-2">

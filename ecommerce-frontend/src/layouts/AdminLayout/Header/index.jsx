@@ -18,7 +18,7 @@ const AdminHeader = () => {
         toast.success('Đăng xuất thành công');
     };
     return (
-        <div className="shadow px-10 py-3 border border-gray-200 fixed left-64 right-0  z-10 ">
+        <div className="shadow px-10 py-3 border border-gray-200 fixed left-64 right-0   ">
             <div className="flex justify-between gap-5 items-center">
                 <div className="flex-1 ">
                     <input
@@ -52,7 +52,7 @@ const AdminHeader = () => {
                     </div>
                     {isLoggedIn && (
                         <div
-                            className="bg-white absolute z-10  w-50 opacity-0 group-hover:opacity-100
+                            className="bg-white absolute z-10  w-50 hidden group-hover:block
                            text-gray-700 right-0 -left-10  shadow  border border-gray-300"
                         >
                             <Link to={'/user/account'} className="">

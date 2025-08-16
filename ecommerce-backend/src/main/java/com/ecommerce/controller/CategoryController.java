@@ -43,4 +43,25 @@ public class CategoryController {
                         .build()
         );
     }
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<ApiResponse<CategoryResponse>> getCategoryById(@PathVariable String categoryId) {
+        return ResponseEntity.ok(
+                ApiResponse.<CategoryResponse>builder()
+                        .message("Get category successfully")
+                        .code("Category-s-get-by-id")
+                        .data(categoryService.getCategoryById(categoryId))
+                        .build()
+        );
+    }
+    @PutMapping("/{categoryId}")
+    public ResponseEntity<ApiResponse<CategoryResponse>> getCategoryById(@PathVariable String categoryId,
+                                                                         @RequestBody CategoryRequest categoryRequest) {
+        return ResponseEntity.ok(
+                ApiResponse.<CategoryResponse>builder()
+                        .message("Update category successfully")
+                        .code("Category-s-update")
+                        .data(categoryService.updateCategory(categoryId, categoryRequest))
+                        .build()
+        );
+    }
 }

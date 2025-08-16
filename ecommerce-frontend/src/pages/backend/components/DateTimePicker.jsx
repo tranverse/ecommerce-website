@@ -26,9 +26,9 @@ const DateTimePicker = ({ name, required, label }) => {
                         rules={{ required: required }}
                         render={({ field, fieldState }) => (
                             <DesktopDateTimePicker
-                                value={field.value ?? null}
+                                value={field.value ? dayjs(field.value) : null}
                                 onChange={field.onChange}
-                                format='DD-MM-YYYY'
+                                format="DD-MM-YYYY"
                                 slotProps={{
                                     textField: {
                                         size: 'small',

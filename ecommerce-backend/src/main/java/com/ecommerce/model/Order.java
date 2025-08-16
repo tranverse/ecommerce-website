@@ -29,13 +29,15 @@ public class Order {
 
     private BigDecimal totalPrice;
 
-    private BigDecimal discountPrice;
-
     private LocalDateTime orderDate;
 
     private BigDecimal totalProductPrice;
 
     private String shippingAddress;
+
+    private String shippingPhone;
+
+    private String shippingCustomerName;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 50)

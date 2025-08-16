@@ -21,7 +21,7 @@ const OrderItem = ({ detail }) => {
                 </div>
                 <div className="w-36  flex justify-center gap-2 items-center ">
                     <Price className={'text-sm line-through font-normal '}>{detail?.originalPrice}</Price>
-                    <Price className={'text-orange-500 font-normal   '}>{detail?.discountPrice}</Price>
+                    <Price className={'text-orange-500 font-normal   '}>{detail?.totalPrice}</Price>
                 </div>
             </div>
         </div>

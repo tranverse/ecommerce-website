@@ -10,7 +10,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     {routes.map((route, index) => {
-                        const { Layout, Page, protected: isProtected, allowRoles = [] } = route;
+                        const { Layout, Page, protected: isProtected, allowRoles = [], type } = route;
                         const element =
                             Layout == null ? (
                                 <>
@@ -29,7 +29,13 @@ function App() {
                             <Route
                                 path={route.path}
                                 key={index}
-                                element={isProtected ? <ProtectedRoute children={element} allowRoles={allowRoles} /> : element}
+                                element={
+                                    isProtected ? (
+                                        <ProtectedRoute children={element} allowRoles={allowRoles} userType={type} />
+                                    ) : (
+                                        element
+                                    )
+                                }
                             />
                         );
                     })}

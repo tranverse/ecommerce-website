@@ -20,9 +20,9 @@ public class OrderDetail {
 
     private Integer quantity;
 
-    private BigDecimal discountPrice;
-
     private BigDecimal totalPrice;
+
+    private BigDecimal discountPrice;
 
     private BigDecimal originalPrice;
 

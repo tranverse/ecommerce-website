@@ -26,7 +26,7 @@ function Navbar({ onMenuLeave, onMenuEnter }) {
                             Fashion
                         </p>
                     </Link>
-                    <Link to={'/products/sale-off'}>
+                    <Link to={'/products?filter=sale'}>
                         <p
                             onMouseEnter={() => onMenuEnter('sale-off')}
                             onMouseLeave={onMenuLeave}

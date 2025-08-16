@@ -15,16 +15,24 @@ const SelectOption = ({ items, name, firstName = 'Tất cả', chosenItem, setCh
                 className={`text-sm border border-gray-300 rounded p-2 cursor-pointer flex justify-between items-center
                 focus:ring-2 focus:ring-[var(--primary)]/40 ${isView ? 'pointer-events-none' : ''}  `}
             >
-                {chosenItem ? <p>{chosenItem}</p> : <p>{firstName}</p>}
+                {chosenItem ? (
+                    <p>{chosenItem}</p>
+                ) : (
+                    <p onClick={() => setChosenItem('all')} className="cursor-pointer">
+                        {firstName}
+                    </p>
+                )}
                 <MdOutlineKeyboardArrowDown className="text-xl " />
             </div>
             {showOption && open && !isView && (
                 <div className="  absolute z-10 bg-white right-0 left-0 mt-1  " ref={selectRef}>
                     {name == 'Loại sản phẩm' ? (
                         <div className=" rounded mt-1 border border-gray-300 my-1 max-h-50 overflow-y-auto  f">
-                            <div className="px-2 hover:bg-purple-50 ">{firstName}</div>
+                            <div className="px-2 cursor-pointer hover:bg-purple-50 " onClick={() => setChosenItem('all')}>
+                                {firstName}
+                            </div>
                             {items?.map((item, index) => (
-                                <>
+                                <React.Fragment key={index}>
                                     <div
                                         className="cursor-pointer hover:bg-purple-50 px-2"
                                         onClick={() => {
@@ -45,7 +53,7 @@ const SelectOption = ({ items, name, firstName = 'Tất cả', chosenItem, setCh
                                             {sub?.name}
                                         </div>
                                     ))}
-                                </>
+                                </React.Fragment>
                             ))}
                         </div>
                     ) : (

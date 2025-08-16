@@ -1,20 +1,15 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.dto.ApiResponse;
-import com.ecommerce.dto.Employee.EmployeeResponse;
-import com.ecommerce.dto.auth.AuthCustomerLoginRequest;
-import com.ecommerce.dto.auth.AuthCustomerResponse;
-import com.ecommerce.dto.auth.AuthEmployeeResponse;
-import com.ecommerce.dto.Employee.EmployeeRequest;
+import com.ecommerce.dto.auth.*;
 import com.ecommerce.dto.customer.CustomerRequest;
 import com.ecommerce.dto.customer.CustomerResponse;
-import com.ecommerce.model.Employee;
+import com.ecommerce.model.Customer;
 import com.ecommerce.service.AuthService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -45,6 +40,17 @@ public class AuthController {
         );
     }
 
+    @PutMapping("/customer/update/{id}")
+    public ResponseEntity<ApiResponse<Customer>> customerLogin(@RequestBody CustomerUpdateRequest customerUpdateRequest,
+                                                               @PathVariable String id) {
+        return ResponseEntity.ok(
+                ApiResponse.<Customer>builder()
+                        .message("Update customer successfully")
+                        .data(authService.updateCustomer(customerUpdateRequest, id))
+                        .code("Customer-s-login")
+                        .build()
+        );
+    }
 
     @PostMapping("/employee/login")
     public ResponseEntity<ApiResponse<AuthEmployeeResponse>> employeeLogin(@RequestBody AuthCustomerLoginRequest loginRequest) {
@@ -53,6 +59,18 @@ public class AuthController {
                         .message("Employee login successfully")
                         .data(authService.employeeLogin(loginRequest))
                         .code("Employee-s-login")
+                        .build()
+        );
+    }
+
+    @PutMapping("/customer/change-password/{id}")
+    public ResponseEntity<ApiResponse<Void>> customerChangePassword(@RequestBody CustomerUpdatePasswordRequest customerUpdatePasswordRequest,
+                                                               @PathVariable String id) {
+        return ResponseEntity.ok(
+                ApiResponse.<Void>builder()
+                        .message("Change password successfully")
+                        .data(authService.customerChangePassword(customerUpdatePasswordRequest, id))
+                        .code("Customer-s-change-password")
                         .build()
         );
     }

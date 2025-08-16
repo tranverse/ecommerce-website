@@ -12,6 +12,13 @@ const AuthService = {
     employeeLogin(data){
         return apiRequest(axiosInstance.post(URL + "/auth/employee/login", data))
     },
+    updateCustomer(id, data){
+        return apiRequest(axiosInstance.put(URL + `/auth/customer/update/${id}`, data))
+      
+    },
+    updateCustomerPassword(data, id){
+        return apiRequest(axiosInstance.put(URL + `/auth/customer/change-password/${id}`, data))
+    }
 
 }
 export default AuthService

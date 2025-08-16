@@ -85,5 +85,15 @@ public class OrderController {
                         .build()
         );
     }
+    @PutMapping("/cancel/{orderId}")
+    public ResponseEntity<ApiResponse<Void>> getOrderStatus(@PathVariable String orderId) {
+        return ResponseEntity.ok(
+                ApiResponse.<Void>builder()
+                        .message("Cancel order successfully")
+                        .code("Order-s-cancel-order-status")
+                        .data(orderService.cancelOrder(orderId))
+                        .build()
+        );
+    }
 
 }

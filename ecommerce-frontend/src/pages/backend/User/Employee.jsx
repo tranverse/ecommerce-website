@@ -63,5 +63,5 @@ export const ViewEmployee = () => {
 
     if (!employee) return <div>Loading...</div>;
 
-    return <EmployeeForm initialValues={employee} onSubmit={() => {}} isView={true}/>;
+    return <EmployeeForm initialValues={employee} onSubmit={() => {}} isView={true} />;
 };

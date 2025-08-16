@@ -7,10 +7,11 @@ import UploadImage from '../components/UploadThumbnail';
 import SubmitButton from '@components/Form/SubmitButton';
 import UploadService from '@services/upload.service';
 import SelectOption from '@pages/backend/components/SelectOption';
+import SelectCategory from '../components/SelectCategory';
 const AddCategory = () => {
     const [parentCategories, setParentCategories] = useState([]);
     const [url, setUrl] = useState('');
-    const [file, setFile] = useState({});
+    const [file, setFile] = useState(null);
     const getAllCategories = async () => {
         try {
             const response = await CategoryService.getAllCategories();
@@ -37,12 +38,9 @@ const AddCategory = () => {
         } else {
             data.parentCategory = { id: data.parentCategory };
         }
-        const payload = {
-            ...data,
-            thumbnail,
-        };
+        data.thumbnail = thumbnail;
         try {
-            const response = await CategoryService.addCategory(payload);
+            const response = await CategoryService.addCategory(data);
             toast.success(response.data.message);
             reset();
             setUrl('');
@@ -57,13 +55,13 @@ const AddCategory = () => {
             <FormWrapper onSubmit={handleAddCategory}>
                 <div className="flex flex-col gap-4    ">
                     <InputField Element={'input'} name={'name'} label={'Name'} />
-                    <SelectOption items={parentCategories} name={'parentCategory'} label={'Parent category'} isAdd={true} />
+                    <SelectCategory items={parentCategories} name={'parentCategory'} label={'Parent category'} isAdd={true} />
                     <div className="m-1">
                         <div className="flex  items-center gap-2">
                             <p>Thumbnail</p>
                             <span className="text-red-500">*</span>
                         </div>
-                        <UploadImage setThumbnail={setFile} setUrl={setUrl} url={url} className={'w-72  h-80  '} />
+                        <UploadImage setFile={setFile} setUrl={setUrl} url={url} className={'w-72  h-80  '} />
                     </div>
                     <div className=" mt-auto  ">
                         <SubmitButton type={'submit'} className={'my-4    p-2 text-md hover:bg-purple-500'}>
