@@ -8,8 +8,10 @@ import com.ecommerce.exception.AppException;
 import com.ecommerce.mapper.ProductMapper;
 import com.ecommerce.model.Image;
 import com.ecommerce.model.Product;
+import com.ecommerce.model.Review;
 import com.ecommerce.model.Variant;
 import com.ecommerce.repository.ProductRepository;
+import com.ecommerce.repository.ReviewRepository;
 import com.ecommerce.util.SlugUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,19 @@ import java.util.stream.Collectors;
 public class ProductService {
     final ProductRepository productRepository;
     final ProductMapper productMapper;
+    final ReviewRepository reviewRepository;
+    public Float calculateRating(Product product) {
+        List<Review> reviews = reviewRepository.findByProductId(product.getId());
+        if (reviews.isEmpty()) {
+            return 0f;
+        }
+
+        float rating = 0f;
+        for (Review review : reviews) {
+            rating += review.getRating();
+        }
+        return rating / reviews.size();
+    }
 
     public List<ProductResponse> getAllProducts() {
         List<TopSellingProduct> topSellingProducts = productRepository.getSaleVolume();
@@ -35,6 +50,7 @@ public class ProductService {
                 product -> {
                     ProductResponse productResponse = productMapper.toProductResponse(product.getProduct());
                     productResponse.setSaleVolume(product.getQuantity());
+                    productResponse.setRating(calculateRating(product.getProduct()));
                     return productResponse;
                 }
         ).toList();
@@ -42,7 +58,9 @@ public class ProductService {
 
     public ProductResponse getProduct(String id) {
         Product product = productRepository.findById(id).orElse(null);
-        return productMapper.toProductResponse(product);
+        ProductResponse productResponse = productMapper.toProductResponse(product);
+        productResponse.setRating(calculateRating(product));
+        return productResponse;
     }
 
     public ProductResponse addProduct(ProductRequest productRequest) {
@@ -84,8 +102,6 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
 
-        // Cập nhật thông tin cơ bản
-        System.out.println(productRequest.getStatus().toString());
         product.setName(productRequest.getName());
         product.setDescription(productRequest.getDescription());
         product.setPrice(productRequest.getPrice());
@@ -93,17 +109,13 @@ public class ProductService {
         product.setOrigin(productRequest.getOrigin());
         product.setStatus(productRequest.getStatus());
         product.setCategory(productRequest.getCategory());
-        System.out.println(ProductStatus.fromValue(productRequest.getStatus().toString()));
-        // Slug mới
         String slug = SlugUtil.toSlug(product.getName() + "." + SlugUtil.generateRandomNumber());
         product.setSlug(slug);
 
-        // Thumbnail
         if (productRequest.getThumbnail() != null) {
             product.setThumbnail(productRequest.getThumbnail());
         }
 
-        // Images
         if (productRequest.getImages() != null) {
             List<Image> images = productRequest.getImages().stream()
                     .map(image -> {
@@ -118,23 +130,31 @@ public class ProductService {
             product.getImages().addAll(images);
         }
 
-        // Variants
-        if (productRequest.getVariants() != null) {
-            List<Variant> variants = productRequest.getVariants().stream()
-                    .map(variant -> {
-                        Variant newVariant = new Variant();
-                        newVariant.setColor(variant.getColor());
-                        newVariant.setSize(variant.getSize());
-                        newVariant.setQuantity(variant.getQuantity());
-                        newVariant.setProduct(product);
-                        return newVariant;
-                    }).collect(Collectors.toList());
-
-            product.getVariants().clear();
-            product.getVariants().addAll(variants);
+        for (Variant v : product.getVariants()) {
+            v.setStatus(false); // đánh dấu hết hàng
         }
 
-        // Lưu một lần
+        for (ProductRequest.VariantDTO vr : productRequest.getVariants()) {
+            Variant exist = product.getVariants().stream()
+                    .filter(v -> v.getColor().equals(vr.getColor()) && v.getSize().equals(vr.getSize()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (exist != null) {
+                exist.setQuantity(vr.getQuantity());
+                exist.setStatus(true);
+            } else {
+                Variant newVariant = new Variant();
+                newVariant.setColor(vr.getColor());
+                newVariant.setSize(vr.getSize());
+                newVariant.setQuantity(vr.getQuantity());
+                newVariant.setStatus(true);
+                newVariant.setProduct(product);
+                product.getVariants().add(newVariant);
+            }
+        }
+
+
         productRepository.save(product);
 
         return productMapper.toProductResponse(product);
@@ -144,13 +164,17 @@ public class ProductService {
         return Arrays.stream(ProductStatus.values()).map(ProductStatus::getValue).collect(Collectors.toList());
     }
 
-
-    public List<ProductResponse> getAllProductOnSale(){
-        List<Product> products = productRepository.findAll();
-        products = products.stream().filter(product -> product.getDiscountPercentage() > 0 &&
-                product.getStatus() == ProductStatus.AVAILABLE).collect(Collectors.toList());
-         return productMapper.toProductResponseList(products);
+    public List<ProductResponse> getAllProductOnSale() {
+        return productRepository.findAll().stream()
+                .filter(p -> p.getDiscountPercentage() > 0 && p.getStatus() == ProductStatus.AVAILABLE)
+                .map(p -> {
+                    ProductResponse res = productMapper.toProductResponse(p);
+                    res.setRating(calculateRating(p));
+                    return res;
+                })
+                .collect(Collectors.toList());
     }
+
 
     public List<ProductResponse> getTopFiveProducts() {
         List<TopSellingProduct> topSellingProducts = productRepository.getSaleVolume();
@@ -160,6 +184,7 @@ public class ProductService {
             .map(product -> {
                 ProductResponse productResponse = productMapper.toProductResponse(product.getProduct());
                 productResponse.setSaleVolume(product.getQuantity());
+                productResponse.setRating(calculateRating(product.getProduct()));
                 return productResponse;
             }).toList();
     }
@@ -170,5 +195,5 @@ public class ProductService {
         return null;
     }
 
-
+    
 }

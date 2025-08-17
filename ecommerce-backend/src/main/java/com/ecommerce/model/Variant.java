@@ -26,6 +26,8 @@ public class Variant {
 
     private Integer quantity;
 
+    private Boolean status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     @JsonBackReference

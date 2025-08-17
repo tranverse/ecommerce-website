@@ -83,7 +83,8 @@ public class CartService {
         return Map.of(
                 "productId", product.getId(),
                 "quantity", cartDetail.getQuantity()
-        );    }
+        );
+    }
 
     public String deleteProductFromCart(String productId, String customerId) {
         Cart cart = cartRepository.findByCustomerId(customerId);

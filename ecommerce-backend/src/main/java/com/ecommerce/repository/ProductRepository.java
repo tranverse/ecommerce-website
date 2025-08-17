@@ -16,6 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     List<TopSellingProduct> getSaleVolume();
 
 
-
+    @Query("SELECT COUNT(p) FROM Product p")
+    Long countAllProducts();
 
 }

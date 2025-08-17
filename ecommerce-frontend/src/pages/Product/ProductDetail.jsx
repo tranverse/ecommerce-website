@@ -70,7 +70,6 @@ const ProductDetail = () => {
 
     const getReviews = async () => {
         const response = await ProductService.getReviewsOfProduct(productId);
-        console.log(response);
         if (response.data.success) {
             setReviews(response.data.data);
         }
@@ -202,7 +201,6 @@ const ProductDetail = () => {
                                 className="border border-gray-200 rounded-lg p-4 shadow hover:shadow-md bg-white transition-shadow duration-200"
                             >
                                 <div className="flex items-start gap-3">
-                                    {/* Avatar khách hàng */}
                                     <div className="w-12 h-12 flex-shrink-0">
                                         <img
                                             src={review.customerAvatar || 'https://via.placeholder.com/48'}
@@ -212,7 +210,6 @@ const ProductDetail = () => {
                                     </div>
 
                                     <div className="flex flex-col w-full">
-                                        {/* Tên & ngày */}
                                         <div className="flex justify-between items-center mb-1">
                                             <p className="font-semibold text-gray-800">{review.customer?.name}</p>
                                             <span className="text-sm text-gray-400">
@@ -230,7 +227,6 @@ const ProductDetail = () => {
                                             )}
                                         </div>
 
-                                        {/* Nội dung đánh giá */}
                                         <p className="text-gray-700 text-sm">{review.comment || 'Chưa có nhận xét.'}</p>
                                     </div>
                                 </div>

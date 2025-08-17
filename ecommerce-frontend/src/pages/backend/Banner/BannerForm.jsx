@@ -45,7 +45,12 @@ const BannerForm = ({ initialValues = null, onSubmit, isView = false }) => {
 
     const onSubmitForm = async (data) => {
         const imgUrl = await uploadImg();
-        const payload = { ...data, imgUrl };
+        const payload = {
+            ...data,
+            imgUrl,
+            startDate: data.startDate.format('YYYY-MM-DD'),
+            endDate: data.endDate.format('YYYY-MM-DD'),
+        };
         console.log(data);
         if (onSubmit) await onSubmit(payload);
         setFile(null);

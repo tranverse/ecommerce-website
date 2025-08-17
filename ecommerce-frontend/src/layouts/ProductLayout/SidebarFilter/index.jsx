@@ -143,30 +143,35 @@ function SidebarFilter({ setValue, setType, startPrice, endPrice, setStartPrice,
 
                 <div className="py-2">
                     <SidebarHeader name={'Rating'} onClick={() => handleCloseSidebar('rating')} />
-                    {closeSidebar?.find((prev) => prev.name == 'rating')?.open == true &&
-                        [...Array(4)].map((_, index1) => (
-                            <div className="text-gray-700 flex items-center gap-1 cursor-pointer hover:bg-gray-100" key={index1}>
-                                <div className="flex">
-                                    {[...Array(5)].map((star, index2) => (
-                                        <div
-                                            key={index2}
-                                            onClick={() => {
-                                                setValue('multi');
-                                                setType(star);
-                                            }}
-                                        >
-                                            {index1 + index2 <= 4 ? (
-                                                <FaStar className="text-yellow-500" key={index2} />
-                                            ) : (
-                                                <CiStar key={index2} className={` text-yellow-500 `} />
-                                            )}
-                                        </div>
-                                    ))}
+                    {closeSidebar?.find((prev) => prev.name == 'rating')?.open &&
+                        [...Array(4)].map((_, index1) => {
+                            const stars = 5 - index1; 
+                            return (
+                                <div
+                                    className="text-gray-700 flex items-center gap-1 cursor-pointer hover:bg-gray-100 p-1"
+                                    key={index1}
+                                    onClick={() => {
+                                        setValue(stars);
+                                        setType('rating'); 
+                                    }}
+                                >
+                                    <div className="flex">
+                                        {[...Array(5)].map((_, index2) => (
+                                            <span key={index2}>
+                                                {index2 < stars ? (
+                                                    <FaStar className="text-yellow-500" />
+                                                ) : (
+                                                    <CiStar className="text-gray-300" />
+                                                )}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <p className="text-sm text-gray-700">or more</p>
                                 </div>
-                                <p className="text-sm text-gray-700">or more</p>
-                            </div>
-                        ))}
+                            );
+                        })}
                 </div>
+
                 <hr className="text-gray-200" />
 
                 <div className="py-2  ">

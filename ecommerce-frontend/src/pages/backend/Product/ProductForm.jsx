@@ -25,7 +25,7 @@ const ProductForm = ({ initialValues = null, onSubmit, isView = false }) => {
     const [images, setImages] = useState([]);
     const [categories, setCategories] = useState([]);
     const [status, setStatus] = useState([]);
-    const [thumbnail, setThumbnail] = useState('');
+    const [file, setFile] = useState('');
     const [url, setUrl] = useState('');
     const inputRefs = useRef({});
     const [colorError, setColorError] = useState('');
@@ -118,7 +118,7 @@ const ProductForm = ({ initialValues = null, onSubmit, isView = false }) => {
             }));
             setImages(newImages);
 
-            setThumbnail(initialValues.thumbnail || '');
+            // setFile(initialValues.thumbnail || '');
             setUrl(initialValues.thumbnail || '');
         } else {
             setSelectedColors([]);
@@ -126,7 +126,7 @@ const ProductForm = ({ initialValues = null, onSubmit, isView = false }) => {
             setColorImages([]);
             setVariants([]);
             setImages([]);
-            setThumbnail('');
+            setFile('');
             setUrl('');
         }
     }, [initialValues]);
@@ -166,11 +166,11 @@ const ProductForm = ({ initialValues = null, onSubmit, isView = false }) => {
     };
 
     const uploadThumbnail = async () => {
-        if (thumbnail) return initialValues?.thumbnail || '';
-        console.log(thumbnail)
-        console.log("1")
+        if (!file) return initialValues?.thumbnail || '';
+        console.log(file);
+        console.log('1');
         const form = new FormData();
-        form.append('file', thumbnail);
+        form.append('file', file);
         const res = await UploadService.uploadSingleImage(form);
         return res.data.data;
     };
@@ -178,7 +178,7 @@ const ProductForm = ({ initialValues = null, onSubmit, isView = false }) => {
     const handleSubmit = async (data, reset) => {
         if (!validateVariants()) return;
         let uploadedImages = null;
-        let uploadedThumbnail = thumbnail;
+        let uploadedThumbnail = initialValues?.thumbnail;
 
         if (!isView) {
             uploadedImages = await uploadImages();
@@ -197,8 +197,8 @@ const ProductForm = ({ initialValues = null, onSubmit, isView = false }) => {
         if (onSubmit) {
             const result = await onSubmit(payload);
             if (result && !isView) {
-                reset(initialValues);
-                setThumbnail('');
+                reset(payload);
+                setFile('');
                 setUrl('');
                 setVariants([]);
                 setSelectedColors([]);
@@ -239,7 +239,7 @@ const ProductForm = ({ initialValues = null, onSubmit, isView = false }) => {
                         <InputField name="description" label="Description" Element="textarea" readOnly={isView} />
                         <div>
                             <Label label="Thumbnail" />
-                            <UploadImage url={url} setUrl={setUrl} setFile={setThumbnail} className="w-56 h-56" isView={isView} />
+                            <UploadImage url={url} setUrl={setUrl} setFile={setFile} className="w-56 h-56" isView={isView} />
                         </div>
                     </div>
 

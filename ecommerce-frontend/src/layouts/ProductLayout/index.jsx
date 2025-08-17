@@ -17,7 +17,6 @@ function ProductLayout({ children }) {
     const filter = query.get('filter');
     const getAllProducts = async () => {
         const response = await ProductService.getAllProduct();
-        console.log(response);
         if (response.data.success) {
             setProducts(response.data.data);
             setShowProducts(response.data.data);
@@ -32,7 +31,9 @@ function ProductLayout({ children }) {
             products.filter((product) => product.variants.some((variant) => variant.color.includes(value.toLowerCase()))),
         );
     };
-    const handleFilterRating = () => {};
+    const handleFilterRating = () => {
+        setShowProducts(products.filter((prev) => prev.rating >= value));
+    };
 
     const handleFilterPrice = () => {
         setShowProducts(
@@ -44,14 +45,19 @@ function ProductLayout({ children }) {
     useEffect(() => {
         getAllProducts();
     }, []);
-
     useEffect(() => {
         if (!products || products.length === 0) return;
 
         if (filter === 'sale') {
             setShowProducts(products.filter((product) => product.discountPercentage > 0));
         } else if (filter) {
-            setShowProducts(products.filter((product) => product.category.name === filter));
+            setShowProducts(
+                products.filter(
+                    (product) =>
+                        product.name.toLowerCase().includes(filter.toLowerCase()) ||
+                        product.category.name.toLowerCase().includes(filter.toLowerCase()),
+                ),
+            );
         } else {
             setShowProducts(products);
         }
@@ -64,11 +70,12 @@ function ProductLayout({ children }) {
             handleFilterColor();
         } else if (type == 'price') {
             handleFilterPrice();
+        } else if (type == 'rating') {
+            console.log('a');
+            handleFilterRating();
         }
     }, [type, value, startPrice, endPrice]);
-    console.log(products);
 
-    console.log(type, startPrice, endPrice);
     return (
         <>
             <div className="min-h-screen bg-gray-100 overflow-hidden">

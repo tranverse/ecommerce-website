@@ -76,12 +76,14 @@ const Home = () => {
                 {banners?.length > 0 && (
                     <div className="relative w-full h-[550px] overflow-hidden ">
                         {banners?.map((banner, index) => (
-                            <img
-                                src={banner?.imgUrl}
-                                className={`w-full h-full transition-opacity  absolute
+                            <Link to={banner?.link}>
+                                <img
+                                    src={banner?.imgUrl}
+                                    className={`w-full h-full transition-opacity  absolute
                                ${currentIdex === index ? 'opacity-100' : 'opacity-0'}`}
-                                key={index}
-                            />
+                                    key={index}
+                                />
+                            </Link>
                         ))}
                         <div className="flex gap-4 absolute bottom-2 z-10 transform -translate-x-1/2  left-1/2   ">
                             {banners?.map((_, index) => (
@@ -99,7 +101,6 @@ const Home = () => {
 
             <section className="my-20  ">
                 <h1 className="uppercase text-center my-10 text-[var(--primary)] text-3xl ">Loại sản phẩm</h1>
-
                 <div className="relative   w-full ">
                     <IoIosArrowBack
                         onClick={scrollLeft}
@@ -108,23 +109,25 @@ const Home = () => {
 
                     <div ref={scrollRef} className="  flex gap-4    overflow-x-auto   scroll-smooth  scrollbar-hide   ">
                         {categories?.map((cate, index) => (
-                            <div
-                                key={index}
-                                className="flex justify-center w-[260px] h-[390px] m-0   items-center relative   flex-shrink-0 
-                        group cursor-pointer  "
-                            >
-                                <img
-                                    src={cate?.thumbnail}
-                                    className="hover:opacity-50 w-full h-full object-contain  "
+                            <Link to={`/products?filter=${cate?.name}`}>
+                                <div
                                     key={index}
-                                />
-                                <p
-                                    className="absolute text-3xl transition-opacity opacity-0 group-hover:block text-black
-                             group-hover:opacity-100 duration-200  font-semibold drop-shadow-2xl "
+                                    className="flex justify-center w-[260px] h-[390px] m-0   items-center relative
+                                flex-shrink-0 group cursor-pointer  "
                                 >
-                                    {cate?.name}
-                                </p>
-                            </div>
+                                    <img
+                                        src={cate?.thumbnail}
+                                        className="hover:opacity-50 w-full h-full object-contain  "
+                                        key={index}
+                                    />
+                                    <p
+                                        className="absolute text-3xl transition-opacity opacity-0 group-hover:block text-black
+                             group-hover:opacity-100 duration-200  font-semibold drop-shadow-2xl "
+                                    >
+                                        {cate?.name}
+                                    </p>
+                                </div>
+                            </Link>
                         ))}
                     </div>
                     <IoIosArrowForward
@@ -149,9 +152,7 @@ const Home = () => {
                 <h1 className="uppercase text-center my-10  text-[var(--primary)] text-3xl ">Sản phẩm bán chạy</h1>
                 <div className="grid grid-cols-5 gap-4 ">
                     {topSellingProduct?.map((product, index) => (
-                        <Link to={`/product/${product?.slug}?id=${product?.id}`} key={index}>
-                            <ProductItem product={product} key={index}></ProductItem>
-                        </Link>
+                        <ProductItem product={product} key={index}></ProductItem>
                     ))}
                 </div>
             </section>

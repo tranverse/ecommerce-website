@@ -232,7 +232,7 @@ function Header() {
                     <div>
                         <div className="grid grid-cols-6 gap-10   w-full    ">
                             {productsOnSale?.map((product, index) => (
-                                <div className="">
+                                <div className="" key={index}>
                                     <ProductItem product={product} key={index} className={''}></ProductItem>
                                 </div>
                             ))}

@@ -27,6 +27,7 @@ public class ProductResponse {
     private Category category;
     private String thumbnail;
     private Long saleVolume;
+    private Float rating;
     private List<Image> images;
     private List<Variant> variants = new ArrayList<>();
 }

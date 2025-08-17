@@ -7,9 +7,7 @@ const Product = ({ products }) => {
         <div className="">
             <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-5 grid-cols-2">
                 {products?.map((product, index) => (
-                    <Link to={`/product/${product?.slug}?id=${product?.id}`} className="block " key={index}>
-                        <ProductItem product={product}></ProductItem>
-                    </Link>
+                    <ProductItem product={product} key={index}></ProductItem>
                 ))}
             </div>
         </div>

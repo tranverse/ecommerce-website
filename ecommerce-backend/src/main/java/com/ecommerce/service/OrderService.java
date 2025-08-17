@@ -11,10 +11,7 @@ import com.ecommerce.enums.ProductStatus;
 import com.ecommerce.exception.AppException;
 import com.ecommerce.mapper.OrderMapper;
 import com.ecommerce.model.*;
-import com.ecommerce.repository.CartDetailRepository;
-import com.ecommerce.repository.CustomerRepository;
-import com.ecommerce.repository.OrderDetailRepository;
-import com.ecommerce.repository.OrderRepository;
+import com.ecommerce.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +41,8 @@ public class OrderService {
     final OrderDetailRepository orderDetailRepository;
     final CustomerRepository customerRepository;
     final CartDetailRepository cartDetailRepository;
+    final ProductRepository productRepository;
+    final VariantRepository variantRepository;
     @Transactional
     public OrderResponse addOrder(OrderRequest orderRequest) {
         Order order = orderMapper.toOrder(orderRequest);
@@ -65,8 +64,8 @@ public class OrderService {
                 .collect(Collectors.toList());
 
         for(OrderRequest.ProductOrderDTO productOrderDTO : orderRequest.getProducts()){
-            Variant variant = productOrderDTO.getVariant();
-            Product product = productOrderDTO.getProduct();
+            Variant variant = variantRepository.findById(productOrderDTO.getVariant().getId()).orElse(null);
+            Product product = productRepository.findById(productOrderDTO.getProduct().getId()).orElse(null);
             if(variant.getQuantity() == 0){
                 throw new AppException(ErrorCode.OUT_OF_STOCK, HttpStatus.NOT_FOUND);
             }
@@ -142,6 +141,16 @@ public class OrderService {
     public Void cancelOrder(String orderId) {
         Order order = orderRepository.findById(orderId).orElse(null);
         order.setStatus(OrderStatus.CANCELLED);
+
+        if (order.getOrderDetails() != null) {
+            for (OrderDetail detail : order.getOrderDetails()) {
+                Variant variant = detail.getVariant();
+                if (variant != null) {
+                    Integer currentQty = variant.getQuantity() != null ? variant.getQuantity() : 0;
+                    variant.setQuantity(currentQty + detail.getQuantity());
+                }
+            }
+        }
         orderRepository.save(order);
         return null;
     }

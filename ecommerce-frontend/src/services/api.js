@@ -10,17 +10,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        const customer = JSON.parse(localStorage.getItem('customer') || "null");
-        const employee = JSON.parse(localStorage.getItem('employee') || "null");
-        let token = null
-        if(customer && customer.role == "CUSTOMER"){
-            const customerToken = localStorage.getItem('accessToken') 
-            token = customerToken
-        }
-        if(employee && employee.role){
-            const employeeToken = localStorage.getItem('employeeAccessToken')
-            token = employeeToken
-        }
+        const token = localStorage.getItem('accessToken') || localStorage.getItem('employeeAccessToken')
 
         if(token){
             config.headers.Authorization = `Bearer ${token}`
